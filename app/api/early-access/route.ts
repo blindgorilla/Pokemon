@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { isValidEmail, normalizeEmail } from "@/lib/validation";
 
 /**
  * Early-access signup endpoint.
  *
- * Today it validates the payload and returns success — no list storage yet.
- * The commented block below is the single integration point for a real email /
- * CRM provider (ConvertKit, Beehiiv, Mailchimp, Loops, Resend Audiences, …).
+ * It validates the payload and stores the address in Supabase
+ * (`early_access_signups`). The commented block further down is the single
+ * integration point for a real email / CRM provider (ConvertKit, Beehiiv,
+ * Mailchimp, Loops, Resend Audiences, …) — still inactive, and if it is ever
+ * wired up it must not be able to fail the signup: storage happens first and
+ * independently of any email delivery.
  *
  * Credentials are read from the environment only — never hard-code a key.
  * See `.env.example` for the expected variables.
@@ -16,6 +20,9 @@ type SignupPayload = {
   email?: unknown;
   source?: unknown;
 };
+
+/** Postgres unique-violation: the address is already on the list. */
+const UNIQUE_VIOLATION = "23505";
 
 export async function POST(request: Request) {
   let payload: SignupPayload;
@@ -38,6 +45,31 @@ export async function POST(request: Request) {
 
   const email = normalizeEmail(payload.email);
   const source = typeof payload.source === "string" ? payload.source : "unknown";
+
+  // --- Storage: always first, and the only thing that can fail the signup ---
+  try {
+    const { error } = await getSupabaseAdmin()
+      .from("early_access_signups")
+      .insert({ email, source });
+
+    // Signing up twice is not a failure — the address is already on the list.
+    if (error && error.code !== UNIQUE_VIOLATION) {
+      // eslint-disable-next-line no-console
+      console.error("[early-access] supabase insert failed", error.message);
+      return NextResponse.json(
+        { ok: false, error: "storage_error" },
+        { status: 500 },
+      );
+    }
+  } catch (cause) {
+    // Missing configuration or a transport failure — same generic response.
+    // eslint-disable-next-line no-console
+    console.error("[early-access] supabase unavailable", cause);
+    return NextResponse.json(
+      { ok: false, error: "storage_error" },
+      { status: 500 },
+    );
+  }
 
   const apiKey = process.env.EMAIL_PROVIDER_API_KEY;
   const listId = process.env.EMAIL_PROVIDER_LIST_ID;

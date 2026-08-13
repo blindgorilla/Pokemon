@@ -314,8 +314,23 @@ export const finalCta = {
 export const form = {
   label: "Email address",
   placeholder: "Enter your email",
-  successMessage:
-    "You're on the list. We'll let you know when BUY OR PASS is ready.",
+  successMessage: "You're in. Here's your free checklist.",
+  successCtaLabel: "View the Checklist",
+  successCtaHref: "/checklist",
   invalidMessage: "Please enter a valid email address.",
   errorMessage: "Something went wrong. Please try again in a moment.",
+} as const;
+
+/** Copy for the /checklist worksheet — the reward granted after signup. */
+export const checklist = {
+  eyebrow: "Free Checklist",
+  title: "The BUY OR PASS Checklist",
+  subtitle: "8 questions to ask before you buy a Pokémon card.",
+  intro:
+    "Work through all eight before you commit money to a card. Tick each question off as you answer it and keep your notes next to it.",
+  checkboxLabel: "Mark this question as answered",
+  notesLabel: "Your notes",
+  notesPlaceholder: "What did you find?",
+  footnote:
+    "Nothing you type here is saved or sent anywhere — it stays in your browser for this session only.",
 } as const;

@@ -134,6 +134,13 @@ export default function EarlyAccessForm({
           </span>
           {formCopy.successMessage}
         </p>
+
+        <Link
+          href={formCopy.successCtaHref}
+          className="mt-3 inline-flex h-[3.25rem] items-center justify-center rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:px-7"
+        >
+          {formCopy.successCtaLabel}
+        </Link>
       </div>
     );
   }
