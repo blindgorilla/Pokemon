@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ChecklistItem from "@/components/ChecklistItem";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import ScrollToTopOnMount from "@/components/ScrollToTopOnMount";
 import { checklist, framework } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -14,10 +15,18 @@ export const metadata: Metadata = {
 /**
  * The reward already granted at signup — no gate, no form. An interactive
  * worksheet over the same eight pillars shown as teasers on the landing page.
+ *
+ * The single wrapper element is load-bearing: after a client-side navigation
+ * Next calls `scrollIntoView()` on each top-level node of the route segment. As
+ * three siblings, the last effective call could be the one on <Footer> — and
+ * with `scroll-behavior: smooth` that walked the visitor to the bottom of the
+ * page whenever they arrived already at the top. One root node means one scroll
+ * target, anchored at the top of the document.
  */
 export default function ChecklistPage() {
   return (
-    <>
+    <div>
+      <ScrollToTopOnMount />
       <Navbar />
       <main>
         <div className="mx-auto w-full max-w-6xl px-5 pt-28 pb-16 sm:px-8 sm:pt-36 sm:pb-24">
@@ -44,6 +53,6 @@ export default function ChecklistPage() {
         </div>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
