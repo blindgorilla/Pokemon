@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+// Aliased so `Analytics` never reads as this project's own analytics helper.
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import PageViewTracker from "@/components/PageViewTracker";
 import { site } from "@/lib/content";
 import "./globals.css";
@@ -50,6 +52,7 @@ export default function RootLayout({
       <body className="min-h-dvh antialiased">
         <PageViewTracker />
         {children}
+        <VercelAnalytics />
       </body>
     </html>
   );

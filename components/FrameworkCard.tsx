@@ -1,11 +1,24 @@
+import type { ReactNode } from "react";
 import type { Pillar } from "@/lib/content";
+
+type FrameworkCardProps = Pillar & {
+  /**
+   * Landing-page cards are teasers — number, title and question only. The
+   * checklist page opts in to the full explanation.
+   */
+  showExplanation?: boolean;
+  /** Interactive footer (checkbox, notes) appended inside the panel. */
+  children?: ReactNode;
+};
 
 export default function FrameworkCard({
   number,
   title,
   question,
   explanation,
-}: Pillar) {
+  showExplanation = false,
+  children,
+}: FrameworkCardProps) {
   return (
     <article className="panel group relative flex flex-col overflow-hidden p-5 transition duration-300 hover:-translate-y-1 hover:border-white/[0.16] sm:p-6">
       <span
@@ -23,7 +36,13 @@ export default function FrameworkCard({
         {question}
       </p>
 
-      <p className="mt-3 text-sm leading-relaxed text-mute-400">{explanation}</p>
+      {showExplanation ? (
+        <p className="mt-3 text-sm leading-relaxed text-mute-400">
+          {explanation}
+        </p>
+      ) : null}
+
+      {children}
 
       {/* Hairline that warms on hover — the only interactive flourish. */}
       <span

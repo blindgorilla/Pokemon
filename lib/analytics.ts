@@ -1,15 +1,16 @@
+import { track as vercelTrack } from "@vercel/analytics";
+
 /**
  * Minimal, provider-agnostic analytics helper.
  *
- * Everything on the page funnels through `track()` so that wiring a real
- * provider later is a single-file change.
+ * Everything on the page funnels through `track()` so that swapping or adding a
+ * provider stays a single-file change.
  *
- * INTEGRATION POINT
- * -----------------
- * To connect a real provider (Plausible, PostHog, GA4, Segment, …):
- *   1. Load the provider script in `app/layout.tsx` (or via a <Script> tag).
- *   2. Forward the event inside `sendToProvider()` below.
- *   3. Keep event names stable — `early_access_signup` is the conversion event.
+ * The active provider is Vercel Web Analytics: `<Analytics />` is rendered in
+ * `app/layout.tsx` and every event below is forwarded to Vercel's own `track()`
+ * from `sendToProvider()`. To add another provider (Plausible, PostHog, GA4, …)
+ * load its script in the layout and forward the event alongside the Vercel call.
+ * Keep event names stable — `early_access_signup` is the conversion event.
  * No provider keys belong in this file; read them from `process.env.NEXT_PUBLIC_*`
  * at the call site of the provider snippet.
  */
@@ -28,13 +29,13 @@ const isDev = process.env.NODE_ENV !== "production";
 function sendToProvider(event: AnalyticsEvent, props: AnalyticsProps): void {
   if (typeof window === "undefined") return;
 
-  // --- INTEGRATION POINT: replace the no-op below with a real provider call ---
-  // Examples:
-  //   window.plausible?.(event, { props });
-  //   window.posthog?.capture(event, props);
-  //   window.gtag?.("event", event, props);
-  void event;
-  void props;
+  // Vercel Analytics rejects `undefined` values, so drop empty props entirely.
+  const properties: Record<string, string | number | boolean> = {};
+  for (const [key, value] of Object.entries(props)) {
+    if (value !== undefined) properties[key] = value;
+  }
+
+  vercelTrack(event, properties);
 }
 
 /**
