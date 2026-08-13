@@ -23,26 +23,35 @@ export const nav = {
 export const hero = {
   eyebrow: "The Pokémon Card Decision System",
   headline: "Know When to Buy. And When to Pass.",
-  body: "A practical decision system for collectors who want to understand what to check before spending hundreds—or thousands—on a Pokémon card.",
-  subBody:
-    "Analyze market price, demand, scarcity, population, grading potential and liquidity so you can make your own buying decisions instead of relying on hype, influencers or strangers online.",
+  body: "Learn how to turn price, demand, scarcity, population, grading and liquidity data into one clear decision: Buy, Negotiate, Wait or Pass.",
   ctaLabel: "Get Early Access",
+  teaser: "Get early access and learn to run this analysis on your own cards.",
   microcopy: "Expected launch price: €39 · No payment today",
 } as const;
 
+/**
+ * The hero demo is a worked example: one card, the decision it led to, and the
+ * few data points behind it. Illustrative only — nothing here is live data and
+ * nothing is calculated for the visitor.
+ */
 export const analysisDemo = {
   title: "CARD ANALYSIS",
+  status: "WORKED EXAMPLE",
+  cardImage: "/example-card.jpeg",
+  cardAlt:
+    "A graded Pokémon card in its slab — the card being evaluated in this example.",
+  cardLabel: "THE CARD",
+  // Trimmed to four rows so the verdict stays above the fold on a 390px screen.
   metrics: [
     { label: "Market Price", value: "€1,850" },
     { label: "Recent Trend", value: "+12.4%" },
     { label: "Liquidity", value: "High" },
-    { label: "Scarcity", value: "Strong" },
     { label: "Demand", value: "Very High" },
-    { label: "Gem Rate", value: "28%" },
   ],
-  decision: "NEGOTIATE",
-  caption:
-    "Strong fundamentals. Entry price is currently above the preferred range.",
+  decision: "BUY",
+  caption: "Strong fundamentals. Entry price is within a reasonable range.",
+  figureCaption:
+    "Example showing how the BUY OR PASS framework is applied to a card.",
 } as const;
 
 export const problem = {
