@@ -1,12 +1,13 @@
 /**
  * Original graded-slab silhouette. Deliberately generic: an abstract prism
  * motif and neutral grading label — no Pokémon artwork, logos or characters.
+ * Width is set by the parent so the slab can stay small on mobile.
  */
 export default function SlabMockup({ className = "" }: { className?: string }) {
   return (
     <div
       aria-hidden="true"
-      className={`relative aspect-[2/3] w-full max-w-[15rem] select-none sm:max-w-[17rem] ${className}`}
+      className={`relative aspect-[2/3] w-full select-none ${className}`}
     >
       {/* Slab shell */}
       <div className="absolute inset-0 rounded-[1.25rem] border border-white/[0.14] bg-gradient-to-b from-white/[0.13] to-white/[0.03] p-[0.4rem] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] backdrop-blur-sm">
@@ -57,8 +58,9 @@ export default function SlabMockup({ className = "" }: { className?: string }) {
             </svg>
           </div>
 
-          {/* Serial strip — data-plate motif */}
-          <div className="mt-3 flex items-center justify-between font-mono text-[0.55rem] tracking-[0.14em] text-mute-500">
+          {/* Serial strip — data-plate motif. Stacked so it survives the
+              narrow width the slab is rendered at inside the hero panel. */}
+          <div className="mt-3 flex flex-col gap-0.5 font-mono text-[0.55rem] tracking-[0.14em] whitespace-nowrap text-mute-500">
             <span>SN 0042 · 118</span>
             <span>POP 1,412</span>
           </div>

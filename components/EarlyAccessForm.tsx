@@ -112,18 +112,28 @@ export default function EarlyAccessForm({
   if (isSuccess) {
     return (
       <div className={`w-full ${className}`}>
-        <p
-          role="status"
-          className="panel flex items-start gap-3 px-5 py-4 text-[0.9375rem] leading-relaxed text-bone-50"
-        >
-          <span
-            aria-hidden="true"
-            className="mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
+        <div className="panel flex flex-col gap-4 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <p
+            role="status"
+            className="flex items-start gap-3 text-[0.9375rem] leading-relaxed text-bone-50"
           >
-            ✓
-          </span>
-          {formCopy.successMessage}
-        </p>
+            <span
+              aria-hidden="true"
+              className="mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
+            >
+              ✓
+            </span>
+            {formCopy.successMessage}
+          </p>
+
+          <Link
+            href={formCopy.successCtaHref}
+            onClick={() => track("checklist_open", { source })}
+            className="inline-flex h-12 flex-none items-center justify-center rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99]"
+          >
+            {formCopy.successCtaLabel}
+          </Link>
+        </div>
       </div>
     );
   }

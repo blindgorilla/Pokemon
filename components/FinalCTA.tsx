@@ -24,14 +24,9 @@ export default function FinalCTA() {
           {finalCta.body}
         </p>
 
-        <div className="hairline mt-8 flex items-center gap-3 rounded-full bg-white/[0.03] px-5 py-2.5">
-          <span className="text-xs tracking-[0.14em] text-mute-400 uppercase">
-            {finalCta.priceLabel}
-          </span>
-          <span className="text-lg font-semibold text-accent">
-            {finalCta.priceValue}
-          </span>
-        </div>
+        <p className="hairline mt-8 rounded-full bg-white/[0.03] px-5 py-2.5 text-[0.8125rem] text-mute-400 sm:text-sm">
+          {finalCta.offerLine}
+        </p>
 
         <div className="mt-8 w-full max-w-xl">
           <EarlyAccessForm source="final_cta" submitLabel={finalCta.ctaLabel} />

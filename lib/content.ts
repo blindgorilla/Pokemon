@@ -17,32 +17,30 @@ export const nav = {
     { label: "The Framework", href: "/#framework" },
     { label: "Early Access", href: "/#early-access" },
   ],
-  cta: { label: "Get Early Access", href: "/#early-access" },
+  cta: { label: "Get the Free Checklist", href: "/#early-access" },
 } as const;
 
 export const hero = {
-  eyebrow: "The Pokémon Card Decision System",
-  headline: "Know When to Buy. And When to Pass.",
-  body: "A practical decision system for collectors who want to understand what to check before spending hundreds—or thousands—on a Pokémon card.",
-  subBody:
-    "Analyze market price, demand, scarcity, population, grading potential and liquidity so you can make your own buying decisions instead of relying on hype, influencers or strangers online.",
-  ctaLabel: "Get Early Access",
-  microcopy: "Expected launch price: €39 · No payment today",
+  eyebrow: "NOT SURE WHICH POKÉMON CARD TO BUY?",
+  headline: "Know What to Buy. Know When to Pass.",
+  body: "Use 8 simple checks to understand whether a card is worth buying, whether the price makes sense, and whether you should Buy, Negotiate, Wait or Pass.",
+  ctaLabel: "Get the Free Checklist",
+  // Pricing lives in the final CTA only — the hero offer is the free checklist.
+  microcopy: "Instant access + join the BUY OR PASS early-access list.",
 } as const;
 
+/**
+ * The hero demo answers one question at a glance: should I buy this card?
+ * Deliberately free of numbers — it shows the shape of a finished decision,
+ * not a calculation performed for the visitor.
+ */
 export const analysisDemo = {
-  title: "CARD ANALYSIS",
-  metrics: [
-    { label: "Market Price", value: "€1,850" },
-    { label: "Recent Trend", value: "+12.4%" },
-    { label: "Liquidity", value: "High" },
-    { label: "Scarcity", value: "Strong" },
-    { label: "Demand", value: "Very High" },
-    { label: "Gem Rate", value: "28%" },
-  ],
-  decision: "NEGOTIATE",
+  eyebrow: "SHOULD I BUY THIS CARD?",
+  decision: "BUY",
+  reason: "Strong fundamentals. Good entry price.",
+  checks: ["Price", "Demand", "Liquidity", "Scarcity"],
   caption:
-    "Strong fundamentals. Entry price is currently above the preferred range.",
+    "Example showing how the BUY OR PASS framework is applied to a card.",
 } as const;
 
 export const problem = {
@@ -286,20 +284,28 @@ export const disclaimer = {
   ],
 } as const;
 
+/** The free checklist, granted straight after signup — no gate on the page. */
+export const checklist = {
+  title: "The BUY OR PASS Checklist",
+  subtitle: "8 questions to ask before you buy a Pokémon card.",
+  backLabel: "Back to BUY OR PASS",
+} as const;
+
 export const finalCta = {
   headline: "The Next Card You Buy Should Have a Reason Behind It.",
-  body: "Join the early-access list for BUY OR PASS and be notified when the first version launches.",
-  priceLabel: "Expected Launch Price",
-  priceValue: "€39",
-  ctaLabel: "Get Early Access",
+  body: "Get the free BUY OR PASS Checklist now. The full method launches soon at €39.",
+  // The only place on the page where the launch price appears.
+  offerLine: "Free Checklist today · Full BUY OR PASS Method launching at €39",
+  ctaLabel: "Get the Free Checklist",
   microcopy: "No payment today. No spam. Just launch updates and early access.",
 } as const;
 
 export const form = {
   label: "Email address",
   placeholder: "Enter your email",
-  successMessage:
-    "You're on the list. We'll let you know when BUY OR PASS is ready.",
+  successMessage: "You're in. Here's your free checklist.",
+  successCtaLabel: "View the Checklist",
+  successCtaHref: "/checklist",
   invalidMessage: "Please enter a valid email address.",
   errorMessage: "Something went wrong. Please try again in a moment.",
 } as const;

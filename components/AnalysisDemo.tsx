@@ -1,100 +1,81 @@
 import SlabMockup from "@/components/SlabMockup";
 import { analysisDemo } from "@/lib/content";
 
-/** Original market-chart motif — illustrative shape, not real market data. */
-function TrendSparkline() {
+function CheckItem({ label }: { label: string }) {
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 240 56"
-      preserveAspectRatio="none"
-      className="h-14 w-full"
-      fill="none"
-    >
-      <defs>
-        <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f0b23e" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="#f0b23e" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M0 44 L24 40 L48 43 L72 34 L96 37 L120 26 L144 30 L168 18 L192 22 L216 12 L240 8 V56 H0 Z"
-        fill="url(#spark-fill)"
-      />
-      <path
-        d="M0 44 L24 40 L48 43 L72 34 L96 37 L120 26 L144 30 L168 18 L192 22 L216 12 L240 8"
-        stroke="#f0b23e"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <li className="flex items-center gap-2">
+      <span
+        aria-hidden="true"
+        className="inline-flex h-4 w-4 flex-none items-center justify-center rounded-full bg-buy/15 text-[0.6rem] font-bold text-buy"
+      >
+        ✓
+      </span>
+      <span className="text-[0.8125rem] text-bone-200">{label}</span>
+    </li>
   );
 }
 
 /**
- * Hero visual: an original slab mockup beside a card-analysis panel that shows
- * what an evaluation looks like when it is finished.
+ * Hero visual: one question, one card, one verdict. The panel is deliberately
+ * number-free — it shows what a finished decision looks like, not a calculation
+ * run on the visitor's behalf.
  */
 export default function AnalysisDemo() {
   return (
-    <div className="flex w-full flex-col items-center gap-6 sm:flex-row sm:items-stretch sm:gap-5 lg:gap-7">
-      <div className="flex w-full justify-center sm:w-[38%] sm:items-center">
-        <SlabMockup />
-      </div>
-
-      <div className="panel relative w-full overflow-hidden p-5 sm:w-[62%] sm:p-6">
+    <figure className="w-full">
+      <div className="panel relative overflow-hidden p-4 sm:p-6">
         <div
           aria-hidden="true"
           className="grid-motif pointer-events-none absolute inset-0 opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_45%)]"
         />
 
         <div className="relative">
-          <div className="flex items-center justify-between">
-            <p className="text-[0.6875rem] font-semibold tracking-[0.22em] text-mute-400">
-              {analysisDemo.title}
-            </p>
-            <span className="flex items-center gap-1.5 text-[0.625rem] font-medium tracking-[0.12em] text-mute-500">
-              <span className="h-1.5 w-1.5 rounded-full bg-buy" />
-              EVALUATED
-            </span>
-          </div>
+          <p className="text-[0.6875rem] font-semibold tracking-[0.22em] text-mute-400">
+            {analysisDemo.eyebrow}
+          </p>
 
-          <dl className="mt-4 divide-y divide-white/[0.06] border-y border-white/[0.06]">
-            {analysisDemo.metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="flex items-center justify-between gap-4 py-2.5"
-              >
-                <dt className="text-[0.8125rem] text-mute-400">{metric.label}</dt>
-                <dd
-                  className={`font-mono text-[0.8125rem] font-medium tracking-tight sm:text-sm ${
-                    metric.label === "Recent Trend" ? "text-buy" : "text-bone-50"
-                  }`}
-                >
-                  {metric.value}
-                </dd>
+          <div className="mt-4 flex flex-col gap-4 sm:mt-5 sm:flex-row sm:items-start sm:gap-6">
+            {/* Original slab motif — generated, no photography or card artwork. */}
+            <div className="mx-auto w-[8.5rem] flex-none sm:mx-0 sm:w-[9rem] lg:w-[10.5rem]">
+              <SlabMockup />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="relative overflow-hidden rounded-xl border border-buy/25 bg-buy/[0.07] px-4 py-3.5 sm:px-5 sm:py-4">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-buy/[0.10] to-transparent"
+                />
+                <div className="relative">
+                  <p className="flex items-center gap-2 text-[0.625rem] font-semibold tracking-[0.2em] text-buy/80">
+                    <span
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 rounded-full bg-buy"
+                    />
+                    DECISION
+                  </p>
+                  <p className="mt-1.5 text-[1.875rem] leading-none font-bold tracking-[0.04em] text-buy sm:text-[2.25rem]">
+                    {analysisDemo.decision}
+                  </p>
+                  <p className="mt-2 text-[0.8125rem] leading-relaxed text-bone-200">
+                    {analysisDemo.reason}
+                  </p>
+                </div>
               </div>
-            ))}
-          </dl>
 
-          <div className="mt-3 opacity-80">
-            <TrendSparkline />
-          </div>
-
-          <div className="mt-4 rounded-xl border border-accent/25 bg-accent/[0.07] px-4 py-4">
-            <p className="text-[0.625rem] font-semibold tracking-[0.2em] text-accent/80">
-              DECISION
-            </p>
-            <p className="mt-1 text-2xl font-bold tracking-[-0.01em] text-accent sm:text-[1.75rem]">
-              {analysisDemo.decision}
-            </p>
-            <p className="mt-2 text-[0.8125rem] leading-relaxed text-mute-400">
-              {analysisDemo.caption}
-            </p>
+              <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-4">
+                {analysisDemo.checks.map((check) => (
+                  <CheckItem key={check} label={check} />
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <figcaption className="mt-3 text-center text-[0.8125rem] leading-relaxed text-mute-500 sm:text-left">
+        {analysisDemo.caption}
+      </figcaption>
+    </figure>
   );
 }

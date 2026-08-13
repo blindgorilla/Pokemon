@@ -19,7 +19,8 @@ export type AnalyticsEvent =
   | "cta_click"
   | "email_form_start"
   | "early_access_signup"
-  | "early_access_error";
+  | "early_access_error"
+  | "checklist_open";
 
 export type AnalyticsProps = Record<string, string | number | boolean | undefined>;
 
