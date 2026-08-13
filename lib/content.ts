@@ -36,6 +36,8 @@ export const hero = {
  */
 export const analysisDemo = {
   eyebrow: "SHOULD I BUY THIS CARD?",
+  cardImage: "/example-card.jpeg",
+  cardAlt: "The graded card being evaluated in this example.",
   decision: "BUY",
   reason: "Strong fundamentals. Good entry price.",
   checks: ["Price", "Demand", "Liquidity", "Scarcity"],

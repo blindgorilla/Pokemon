@@ -1,4 +1,4 @@
-import SlabMockup from "@/components/SlabMockup";
+import Image from "next/image";
 import { analysisDemo } from "@/lib/content";
 
 function CheckItem({ label }: { label: string }) {
@@ -35,9 +35,20 @@ export default function AnalysisDemo() {
           </p>
 
           <div className="mt-4 flex flex-col gap-4 sm:mt-5 sm:flex-row sm:items-start sm:gap-6">
-            {/* Original slab motif — generated, no photography or card artwork. */}
-            <div className="mx-auto w-[8.5rem] flex-none sm:mx-0 sm:w-[9rem] lg:w-[10.5rem]">
-              <SlabMockup />
+            {/* The card under evaluation. Rendered at its intrinsic ratio and
+                capped narrow on mobile so the verdict stays near the top. */}
+            <div className="mx-auto w-[9.5rem] flex-none sm:mx-0 sm:w-[10rem] lg:w-[11.5rem]">
+              <div className="overflow-hidden rounded-xl border border-white/[0.10] bg-ink-900/70 p-1.5 shadow-[0_26px_50px_-32px_rgba(0,0,0,0.95)]">
+                <Image
+                  src={analysisDemo.cardImage}
+                  alt={analysisDemo.cardAlt}
+                  width={1320}
+                  height={1565}
+                  priority
+                  sizes="(min-width: 1024px) 184px, (min-width: 640px) 160px, 152px"
+                  className="h-auto w-full rounded-lg"
+                />
+              </div>
             </div>
 
             <div className="min-w-0 flex-1">
