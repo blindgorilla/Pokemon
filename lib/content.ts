@@ -10,46 +10,53 @@ export const site = {
   url: "https://buyorpass.vercel.app",
 } as const;
 
+/** Fragment id of the hero email field — the single target for every nav CTA. */
+export const HERO_FIELD_ID = "get-the-sheet";
+
 export const nav = {
   // Absolute hashes so the same nav works from /privacy as well as the home page.
   links: [
     { label: "How It Works", href: "/#how-it-works" },
     { label: "The Framework", href: "/#framework" },
-    { label: "Early Access", href: "/#early-access" },
   ],
-  cta: { label: "Get Early Access", href: "/#early-access" },
+  // Points at the hero field itself so the link both scrolls and focuses it.
+  cta: {
+    label: "Get the Free Buy or Pass Sheet",
+    href: `/#${HERO_FIELD_ID}`,
+  },
 } as const;
 
 export const hero = {
-  eyebrow: "The Pokémon Card Decision System",
-  headline: "Know When to Buy. And When to Pass.",
-  body: "Learn how to turn price, demand, scarcity, population, grading and liquidity data into one clear decision: Buy, Negotiate, Wait or Pass.",
-  ctaLabel: "Get Early Access",
-  teaser: "Get early access and learn to run this analysis on your own cards.",
-  microcopy: "Expected launch price: €39 · No payment today",
+  eyebrow: "Not sure which Pokémon card to buy?",
+  headlineLead: "Know What to Buy.",
+  headlineTrail: "Know When to Pass.",
+  body: "Use 8 simple checks to see if a Pokémon card is worth buying — and whether you should Buy, Negotiate, Wait or Pass.",
+  ctaLabel: "Get the Free Buy or Pass Sheet",
+  formNote: "1-page decision sheet + BUY OR PASS early access.",
 } as const;
 
 /**
  * The hero demo is a worked example: one card, the decision it led to, and the
- * few data points behind it. Illustrative only — nothing here is live data and
+ * four conclusions behind it. Illustrative only — nothing here is live data and
  * nothing is calculated for the visitor.
  */
 export const analysisDemo = {
-  title: "CARD ANALYSIS",
+  title: "€1,850 — BUY OR PASS?",
   status: "WORKED EXAMPLE",
   cardImage: "/example-card.jpeg",
   cardAlt:
     "A graded Pokémon card in its slab — the card being evaluated in this example.",
   cardLabel: "THE CARD",
-  // Trimmed to four rows so the verdict stays above the fold on a 390px screen.
-  metrics: [
-    { label: "Market Price", value: "€1,850" },
-    { label: "Recent Trend", value: "+12.4%" },
-    { label: "Liquidity", value: "High" },
-    { label: "Demand", value: "Very High" },
-  ],
+  decisionLabel: "DECISION",
   decision: "BUY",
-  caption: "Strong fundamentals. Entry price is within a reasonable range.",
+  caption: "Strong fundamentals. Good entry price.",
+  // Conclusions, not metrics — the reader should see card → factors → BUY.
+  factors: [
+    { label: "Price", value: "Fair" },
+    { label: "Demand", value: "Strong" },
+    { label: "Liquidity", value: "High" },
+    { label: "Scarcity", value: "Healthy" },
+  ],
   figureCaption:
     "Example showing how the BUY OR PASS framework is applied to a card.",
 } as const;

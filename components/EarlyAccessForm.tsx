@@ -14,6 +14,13 @@ type EarlyAccessFormProps = {
   submitLabel: string;
   autoFocus?: boolean;
   className?: string;
+  /**
+   * Overrides the generated input id so a nav CTA can link straight to the
+   * field — the browser then scrolls to it and moves focus into it.
+   */
+  fieldId?: string;
+  /** Line shown under the form, before the privacy link. */
+  note?: string;
 };
 
 /** Ignore repeat submits fired within this window (double-tap / double-click). */
@@ -24,8 +31,11 @@ export default function EarlyAccessForm({
   submitLabel,
   autoFocus = false,
   className = "",
+  fieldId,
+  note = "We only use your email for launch updates.",
 }: EarlyAccessFormProps) {
-  const inputId = useId();
+  const generatedId = useId();
+  const inputId = fieldId ?? generatedId;
   const statusId = useId();
 
   const [email, setEmail] = useState("");
@@ -180,7 +190,7 @@ export default function EarlyAccessForm({
           id={statusId}
           role="status"
           aria-live="polite"
-          className={`mt-3 min-h-[1.25rem] text-sm ${
+          className={`mt-2 min-h-[1.25rem] text-sm ${
             isError ? "text-pass" : "text-mute-400"
           }`}
         >
@@ -189,7 +199,7 @@ export default function EarlyAccessForm({
       </form>
 
       <p className="mt-0.5 text-sm text-mute-500">
-        We only use your email for launch updates.{" "}
+        {note}{" "}
         <Link
           href="/privacy"
           className="text-mute-400 underline underline-offset-4 transition hover:text-bone-50"

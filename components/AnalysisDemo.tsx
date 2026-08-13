@@ -1,44 +1,13 @@
 import Image from "next/image";
 import { analysisDemo } from "@/lib/content";
 
-/** Original market-chart motif — illustrative shape, not real market data. */
-function TrendSparkline() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 240 56"
-      preserveAspectRatio="none"
-      className="h-8 w-full sm:h-10"
-      fill="none"
-    >
-      <defs>
-        <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f0b23e" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="#f0b23e" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M0 44 L24 40 L48 43 L72 34 L96 37 L120 26 L144 30 L168 18 L192 22 L216 12 L240 8 V56 H0 Z"
-        fill="url(#spark-fill)"
-      />
-      <path
-        d="M0 44 L24 40 L48 43 L72 34 L96 37 L120 26 L144 30 L168 18 L192 22 L216 12 L240 8"
-        stroke="#f0b23e"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 /**
- * Hero visual: the card being evaluated, the decision it led to, and the data
- * that supported it — in that order, so the relationship reads
- * "this card → supporting analysis → BUY" on the first glance.
+ * Hero visual: the card being evaluated, the decision it led to, and the four
+ * conclusions that supported it — in that order, so the relationship reads
+ * "this card → these factors → BUY" within seconds, on mobile as on desktop.
  *
- * The card stays deliberately small (152px on mobile) so the verdict is the
- * dominant element of the panel and stays within the first scroll at ~390px.
+ * The real card photo (/public/example-card.jpeg) is always rendered; it stays
+ * deliberately narrow (~22% of the panel on desktop) so the verdict dominates.
  */
 export default function AnalysisDemo() {
   return (
@@ -51,18 +20,18 @@ export default function AnalysisDemo() {
 
         <div className="relative">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-[0.6875rem] font-semibold tracking-[0.22em] text-mute-400">
+            <p className="text-[0.8125rem] font-semibold tracking-[0.08em] text-bone-200 sm:text-sm">
               {analysisDemo.title}
             </p>
-            <span className="flex items-center gap-1.5 text-[0.625rem] font-medium tracking-[0.12em] text-mute-500">
+            <span className="flex flex-none items-center gap-1.5 text-[0.625rem] font-medium tracking-[0.12em] text-mute-500">
               <span className="h-1.5 w-1.5 rounded-full bg-buy" />
               {analysisDemo.status}
             </span>
           </div>
 
           <div className="mt-4 flex flex-col gap-4 sm:mt-5 sm:flex-row sm:items-start sm:gap-6">
-            {/* 1 — the card being evaluated */}
-            <div className="mx-auto w-[9.5rem] shrink-0 sm:mx-0 sm:w-[10rem] lg:w-[11.5rem]">
+            {/* 1 — the card being evaluated (real photo, shown at every size) */}
+            <div className="mx-auto w-[8.5rem] shrink-0 sm:mx-0 sm:w-[22%] sm:min-w-[8rem]">
               <div className="overflow-hidden rounded-xl border border-white/[0.10] bg-ink-900/70 p-1.5 shadow-[0_26px_50px_-32px_rgba(0,0,0,0.95)]">
                 <Image
                   src={analysisDemo.cardImage}
@@ -70,7 +39,7 @@ export default function AnalysisDemo() {
                   width={1320}
                   height={1565}
                   priority
-                  sizes="(min-width: 1024px) 184px, (min-width: 640px) 160px, 152px"
+                  sizes="(min-width: 640px) 22vw, 136px"
                   className="h-auto w-full rounded-lg"
                 />
               </div>
@@ -81,10 +50,10 @@ export default function AnalysisDemo() {
 
             <div className="min-w-0 flex-1">
               {/* 2 — the decision, the dominant element of the panel */}
-              <div className="relative overflow-hidden rounded-xl border border-buy/25 bg-buy/[0.07] px-4 py-3.5 sm:px-5 sm:py-4">
+              <div className="relative overflow-hidden rounded-xl border border-buy/25 bg-buy/[0.07] px-4 py-4 sm:px-6 sm:py-5">
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-buy/[0.10] to-transparent"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-buy/[0.10] to-transparent"
                 />
                 <div className="relative">
                   <p className="flex items-center gap-2 text-[0.625rem] font-semibold tracking-[0.2em] text-buy/80">
@@ -92,43 +61,33 @@ export default function AnalysisDemo() {
                       aria-hidden="true"
                       className="h-1.5 w-1.5 rounded-full bg-buy"
                     />
-                    DECISION
+                    {analysisDemo.decisionLabel}
                   </p>
-                  <p className="mt-1.5 text-[1.875rem] leading-none font-bold tracking-[0.04em] text-buy sm:text-[2.25rem]">
+                  <p className="mt-1.5 text-[2.5rem] leading-none font-bold tracking-[0.04em] text-buy sm:text-[3.25rem]">
                     {analysisDemo.decision}
                   </p>
-                  <p className="mt-2 text-[0.8125rem] leading-relaxed text-bone-200">
+                  <p className="mt-2.5 text-[0.875rem] leading-relaxed text-bone-200">
                     {analysisDemo.caption}
                   </p>
                 </div>
               </div>
 
-              {/* 3 — supporting stats, deliberately secondary */}
-              <dl className="mt-3 divide-y divide-white/[0.06] border-y border-white/[0.06] sm:mt-4">
-                {analysisDemo.metrics.map((metric) => (
+              {/* 3 — the supporting conclusions, deliberately compact */}
+              <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-0 sm:mt-4 sm:grid-cols-4 sm:gap-x-3">
+                {analysisDemo.factors.map((factor) => (
                   <div
-                    key={metric.label}
-                    className="flex items-center justify-between gap-4 py-1.5 sm:py-2"
+                    key={factor.label}
+                    className="flex items-baseline justify-between gap-2 border-t border-white/[0.06] py-2 sm:flex-col sm:justify-start sm:gap-1"
                   >
                     <dt className="text-[0.75rem] text-mute-500">
-                      {metric.label}
+                      {factor.label}
                     </dt>
-                    <dd
-                      className={`font-mono text-[0.75rem] font-medium tracking-tight sm:text-[0.8125rem] ${
-                        metric.label === "Recent Trend"
-                          ? "text-buy/90"
-                          : "text-bone-200"
-                      }`}
-                    >
-                      {metric.value}
+                    <dd className="text-[0.8125rem] font-medium text-bone-200">
+                      {factor.value}
                     </dd>
                   </div>
                 ))}
               </dl>
-
-              <div className="mt-2 opacity-70">
-                <TrendSparkline />
-              </div>
             </div>
           </div>
         </div>
