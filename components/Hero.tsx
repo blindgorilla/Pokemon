@@ -23,7 +23,7 @@ export default function Hero() {
         className="grid-motif pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(70%_55%_at_50%_0%,black,transparent)]"
       />
 
-      <div className="relative mx-auto w-full max-w-6xl px-5 pb-16 pt-28 sm:px-8 sm:pb-24 sm:pt-36 lg:pb-28 lg:pt-40">
+      <div className="relative mx-auto w-full max-w-6xl px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-36 lg:pb-28 lg:pt-40">
         <div className="rise flex flex-col items-start">
           <p className="hairline eyebrow rounded-full bg-white/[0.03] px-3 py-1.5">
             {hero.eyebrow}
@@ -36,15 +36,11 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-bone-200 sm:text-xl">
+          <p className="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-bone-200 sm:mt-6 sm:text-xl">
             {hero.body}
           </p>
 
-          <p className="mt-4 max-w-2xl text-[0.9375rem] leading-relaxed text-mute-400 sm:text-base">
-            {hero.subBody}
-          </p>
-
-          <div className="mt-8 w-full max-w-xl">
+          <div className="mt-7 w-full max-w-xl sm:mt-8">
             {revealed ? (
               <EarlyAccessForm
                 source="hero"
@@ -64,11 +60,14 @@ export default function Hero() {
               </button>
             )}
 
-            <p className="mt-4 text-sm text-mute-500">{hero.microcopy}</p>
+            <p className="mt-4 text-[0.9375rem] leading-relaxed text-bone-200">
+              {hero.teaser}
+            </p>
+            <p className="mt-2 text-sm text-mute-500">{hero.microcopy}</p>
           </div>
         </div>
 
-        <div className="rise mt-14 [animation-delay:140ms] sm:mt-20">
+        <div className="rise mt-10 [animation-delay:140ms] sm:mt-20">
           <AnalysisDemo />
         </div>
       </div>
