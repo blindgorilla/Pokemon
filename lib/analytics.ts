@@ -10,7 +10,12 @@ import { track as vercelTrack } from "@vercel/analytics";
  * `app/layout.tsx` and every event below is forwarded to Vercel's own `track()`
  * from `sendToProvider()`. To add another provider (Plausible, PostHog, GA4, …)
  * load its script in the layout and forward the event alongside the Vercel call.
- * Keep event names stable — `early_access_signup` is the conversion event.
+ * Keep event names stable. Two conversions are measured, and they are
+ * deliberately NOT the same event:
+ *   - `free_sheet_signup`         — submitted an email for the free sheet;
+ *   - `paid_product_interest_*`   — answered the question about the €39 Method.
+ * Comparing the second against the first is the whole point: it separates
+ * "people like free Pokémon content" from "people want the paid Method".
  * No provider keys belong in this file; read them from `process.env.NEXT_PUBLIC_*`
  * at the call site of the provider snippet.
  */
@@ -19,8 +24,11 @@ export type AnalyticsEvent =
   | "page_view"
   | "cta_click"
   | "email_form_start"
-  | "early_access_signup"
-  | "early_access_error";
+  | "free_sheet_signup"
+  | "free_sheet_error"
+  | "paid_product_interest_yes"
+  | "paid_product_interest_maybe"
+  | "paid_product_interest_no";
 
 export type AnalyticsProps = Record<string, string | number | boolean | undefined>;
 

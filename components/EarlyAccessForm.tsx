@@ -3,8 +3,10 @@
 import { useCallback, useId, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { track } from "@/lib/analytics";
+import ProductInterest from "@/components/ProductInterest";
+import { hasSheetPdf, sheetHref } from "@/lib/sheet";
 import { isValidEmail, MAX_EMAIL_LENGTH } from "@/lib/validation";
-import { form as formCopy } from "@/lib/content";
+import { form as formCopy, signupSuccess } from "@/lib/content";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -41,6 +43,12 @@ export default function EarlyAccessForm({
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  /**
+   * The row id the early-access endpoint returned. Held so the interest
+   * answer updates that exact row by primary key — never a fresh insert,
+   * never a lookup by email.
+   */
+  const [signedUpId, setSignedUpId] = useState("");
 
   // Refs (not state) so the guards apply immediately, before React re-renders.
   const inFlightRef = useRef(false);
@@ -83,14 +91,16 @@ export default function EarlyAccessForm({
     setStatus("loading");
     setMessage("");
 
+    const trimmed = email.trim();
+
     try {
       const response = await fetch("/api/early-access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), source }),
+        body: JSON.stringify({ email: trimmed, source }),
       });
 
-      const data: { ok?: boolean; error?: string } = await response
+      const data: { ok?: boolean; error?: string; id?: string } = await response
         .json()
         .catch(() => ({}));
 
@@ -99,17 +109,18 @@ export default function EarlyAccessForm({
         setMessage(
           response.status === 400 ? formCopy.invalidMessage : formCopy.errorMessage,
         );
-        track("early_access_error", { source, status: response.status });
+        track("free_sheet_error", { source, status: response.status });
         return;
       }
 
       setStatus("success");
       setMessage(formCopy.successMessage);
-      track("early_access_signup", { source });
+      setSignedUpId(data.id ?? "");
+      track("free_sheet_signup", { source });
     } catch {
       setStatus("error");
       setMessage(formCopy.errorMessage);
-      track("early_access_error", { source, status: "network" });
+      track("free_sheet_error", { source, status: "network" });
     } finally {
       inFlightRef.current = false;
     }
@@ -122,31 +133,69 @@ export default function EarlyAccessForm({
   if (isSuccess) {
     return (
       <div className={`w-full ${className}`}>
-        <p
-          role="status"
-          className="panel flex items-start gap-3 px-5 py-4 text-[0.9375rem] leading-relaxed text-bone-50"
-        >
-          <span
-            aria-hidden="true"
-            className="mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
-          >
-            ✓
-          </span>
-          {formCopy.successMessage}
-        </p>
+        {/*
+          Stage A — the reward, on its own. Calm and uncluttered: a status
+          line, a headline, one line of use-guidance, one highly visible
+          button. Nothing about the paid Method appears here.
+        */}
+        <div className="panel w-full p-6 text-center sm:p-8 sm:text-left">
+          <p className="flex items-center justify-center gap-2.5 sm:justify-start">
+            <span
+              aria-hidden="true"
+              className="inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
+            >
+              ✓
+            </span>
+            <span className="eyebrow">{signupSuccess.eyebrow}</span>
+          </p>
 
-        <Link
-          href={formCopy.successCtaHref}
-          className="mt-3 inline-flex h-[3.25rem] items-center justify-center rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:px-7"
-        >
-          {formCopy.successCtaLabel}
-        </Link>
+          <h3
+            role="status"
+            className="mt-3 text-2xl leading-snug font-semibold tracking-[-0.01em] text-bone-50 sm:text-3xl"
+          >
+            {signupSuccess.headline}
+          </h3>
+
+          <p className="mx-auto mt-2.5 max-w-md text-[0.9375rem] leading-relaxed text-bone-200 sm:mx-0 sm:max-w-none">
+            {signupSuccess.body}
+          </p>
+
+          {hasSheetPdf ? (
+            <a
+              href={sheetHref}
+              download
+              className="mt-5 inline-flex h-[3.5rem] w-full items-center justify-center rounded-xl bg-accent px-7 text-base font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:w-auto"
+            >
+              {signupSuccess.downloadLabel}
+            </a>
+          ) : (
+            <Link
+              href={sheetHref}
+              className="mt-5 inline-flex h-[3.5rem] w-full items-center justify-center rounded-xl bg-accent px-7 text-base font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:w-auto"
+            >
+              {signupSuccess.openLabel}
+            </Link>
+          )}
+        </div>
+
+        {/*
+          Generous separation, then Stage B — a large, separate premium
+          invitation, not a continuation of the reward panel above. It is
+          never a condition of Stage A and is measured as its own event.
+          Only rendered once a row id came back — without one, the interest
+          endpoint would have nothing to update.
+        */}
+        {signedUpId && (
+          <div className="mt-8 sm:mt-10">
+            <ProductInterest id={signedUpId} source={source} />
+          </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`w-full max-w-xl ${className}`}>
       <form onSubmit={handleSubmit} noValidate className="w-full">
         <label htmlFor={inputId} className="sr-only">
           {formCopy.label}

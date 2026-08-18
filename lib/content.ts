@@ -30,9 +30,28 @@ export const hero = {
   eyebrow: "Not sure which Pokémon card to buy?",
   headlineLead: "Know What to Buy.",
   headlineTrail: "Know When to Pass.",
-  body: "Use 8 simple checks to see if a Pokémon card is worth buying — and whether you should Buy, Negotiate, Wait or Pass.",
-  ctaLabel: "Get the Free Buy or Pass Sheet",
-  formNote: "1-page decision sheet + BUY OR PASS early access.",
+  // Credibility evidence, not a promise: a specific, verifiable personal
+  // result, immediately qualified by hero.disclaimer below.
+  body: "Use the same 8-part decision process I developed while building a Pokémon card portfolio valued at €15K+ from roughly €5K invested.",
+  // The free-value line — what the sheet itself does for the reader.
+  subBody: "Learn what to check before you buy, grade, hold or walk away from a card.",
+  disclaimer:
+    "Personal historical results. Collectible values fluctuate and future results are not guaranteed.",
+  ctaLabel: "Get My Free Buy or Pass Sheet",
+  formNote: "Free · 1 page · Use it before your next card purchase",
+  /**
+   * Authenticity visual only — a real personal collection, not a worked
+   * example. It deliberately carries no decision/verdict: the BUY verdict
+   * belongs to the single-card analysis demo below the hero.
+   */
+  collection: {
+    image: "/hero-collection.jpeg",
+    alt: "A hand holding a fanned-out spread of Pokémon cards in protective sleeves, from a real personal collection.",
+    // Sits as a plate inside the photo, so the claim reads as a caption of
+    // that collection rather than a floating line of page copy.
+    label: "Real Collection",
+    caption: "Real buying decisions.",
+  },
 } as const;
 
 /**
@@ -314,12 +333,87 @@ export const finalCta = {
 export const form = {
   label: "Email address",
   placeholder: "Enter your email",
-  successMessage: "You're in. Here's your free checklist.",
-  successCtaLabel: "View the Checklist",
-  successCtaHref: "/checklist",
   invalidMessage: "Please enter a valid email address.",
   errorMessage: "Something went wrong. Please try again in a moment.",
+  /** Announced to screen readers the moment the signup succeeds. */
+  successMessage: "Your Free Buy or Pass Sheet Is Ready.",
 } as const;
+
+/**
+ * Stage A of the post-signup experience: the reward, on its own, with the
+ * paid Method nowhere in view yet. Deliberately calm — one status line, one
+ * headline, one line of use-guidance, one button.
+ */
+export const signupSuccess = {
+  // Rendered through the `eyebrow` utility, which uppercases it — reads as
+  // "YOUR FREE SHEET IS READY" next to the checkmark already in the markup.
+  eyebrow: "Your free sheet is ready",
+  headline: "Your Free Buy or Pass Sheet Is Ready.",
+  body: "Use it before your next card purchase to know what to check before you buy.",
+  /** Used when no PDF is configured; the sheet is served as a page instead. */
+  openLabel: "Open My Free Buy or Pass Sheet",
+  openHref: "/checklist",
+  /** Used once NEXT_PUBLIC_SHEET_PDF_URL points at a real file. */
+  downloadLabel: "Download My Free Buy or Pass Sheet",
+} as const;
+
+/**
+ * Stage B: the paid-Method invitation. A product pitch, not a survey — one
+ * dominant CTA, two quiet alternatives. Free sheet = WHAT to check; the
+ * Method = HOW to decide. Shown only after Stage A and never a condition of
+ * it. Externally the product is only ever "the BUY OR PASS Method" — never a
+ * course.
+ */
+export const productInterest = {
+  eyebrow: "Ready to go deeper?",
+  headline: "Want to Know Which Pokémon Cards Are Actually Worth Buying?",
+  // Rendered as two lines with WHAT / HOW picked out in the accent colour.
+  whatVsHow: {
+    what: {
+      prefix: "The free sheet shows you ",
+      emphasis: "WHAT",
+      suffix: " to check.",
+    },
+    how: {
+      prefix: "The full BUY OR PASS Method shows you ",
+      emphasis: "HOW",
+      suffix:
+        " I decide — using real prices, populations, demand, grading, liquidity and real card case studies.",
+    },
+  },
+  benefits: [
+    {
+      title: "Know the real price",
+      body: "Stop confusing asking prices with what cards actually sell for.",
+    },
+    {
+      title: "Know what makes a strong card",
+      body: "Understand demand, scarcity, population, liquidity and grading potential together.",
+    },
+    {
+      title: "Know when to walk away",
+      body: "Learn when a card is a Buy, when to Negotiate, when to Wait and when to Pass.",
+    },
+  ],
+  proof:
+    "Built from the same decision process I developed while growing my own Pokémon card portfolio from roughly €5K invested to €15K+ in value.",
+  proofDisclaimer: "Personal historical results. Future results are not guaranteed.",
+  productDescription:
+    "A short practical guide with real card examples, research walkthroughs and decision frameworks.",
+  priceLabel: "Expected launch price",
+  priceValue: "€39",
+  primaryCta: "Yes — Give Me First Access",
+  maybeCta: "Maybe — tell me more",
+  noCta: "No thanks",
+  acknowledgements: {
+    yes: "You're on the first-access list. You'll be one of the first to know when the BUY OR PASS Method is ready.",
+    maybe: "Got it — we'll send you more details before launch.",
+    no: "No problem — your free sheet is still yours to use.",
+  },
+} as const;
+
+/** `yes` | `maybe` | `no` — persisted as `product_interest` on the signup row. */
+export type ProductInterestValue = keyof typeof productInterest.acknowledgements;
 
 /** Copy for the /checklist worksheet — the reward granted after signup. */
 export const checklist = {
