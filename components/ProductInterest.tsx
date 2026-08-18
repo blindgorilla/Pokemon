@@ -16,8 +16,12 @@ import {
  */
 
 type ProductInterestProps = {
-  /** The address that just signed up, so the answer can be stored beside it. */
-  email: string;
+  /**
+   * The id of the signup row just created (or reused) by the early-access
+   * endpoint. The answer updates that exact row by primary key — never a
+   * fresh insert, and never a lookup by email.
+   */
+  id: string;
   /** Where the signup happened ("hero", "final_cta") — carried into analytics. */
   source: string;
 };
@@ -28,7 +32,7 @@ const EVENTS: Record<ProductInterestValue, AnalyticsEvent> = {
   no: "paid_product_interest_no",
 };
 
-export default function ProductInterest({ email, source }: ProductInterestProps) {
+export default function ProductInterest({ id, source }: ProductInterestProps) {
   const [answer, setAnswer] = useState<ProductInterestValue | null>(null);
 
   const choose = useCallback(
@@ -39,15 +43,16 @@ export default function ProductInterest({ email, source }: ProductInterestProps)
       // Analytics first: the measurement must not depend on storage succeeding.
       track(EVENTS[value], { source });
 
-      // Best-effort persistence. The acknowledgement is already on screen, and
-      // a failure here must never look like the answer was rejected.
+      // Best-effort persistence, addressed by id so it can only ever update
+      // the signup row created a moment ago — never insert a new one. A
+      // failure here must never look like the answer was rejected.
       void fetch("/api/product-interest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, interest: value }),
+        body: JSON.stringify({ id, interest: value }),
       }).catch(() => {});
     },
-    [answer, email, source],
+    [answer, id, source],
   );
 
   return (

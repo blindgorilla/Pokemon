@@ -43,8 +43,12 @@ export default function EarlyAccessForm({
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
-  /** Held so the interest answer can be stored against the same address. */
-  const [signedUpEmail, setSignedUpEmail] = useState("");
+  /**
+   * The row id the early-access endpoint returned. Held so the interest
+   * answer updates that exact row by primary key — never a fresh insert,
+   * never a lookup by email.
+   */
+  const [signedUpId, setSignedUpId] = useState("");
 
   // Refs (not state) so the guards apply immediately, before React re-renders.
   const inFlightRef = useRef(false);
@@ -96,7 +100,7 @@ export default function EarlyAccessForm({
         body: JSON.stringify({ email: trimmed, source }),
       });
 
-      const data: { ok?: boolean; error?: string } = await response
+      const data: { ok?: boolean; error?: string; id?: string } = await response
         .json()
         .catch(() => ({}));
 
@@ -111,7 +115,7 @@ export default function EarlyAccessForm({
 
       setStatus("success");
       setMessage(formCopy.successMessage);
-      setSignedUpEmail(trimmed);
+      setSignedUpId(data.id ?? "");
       track("free_sheet_signup", { source });
     } catch {
       setStatus("error");
@@ -178,10 +182,14 @@ export default function EarlyAccessForm({
           Generous separation, then Stage B — a large, separate premium
           invitation, not a continuation of the reward panel above. It is
           never a condition of Stage A and is measured as its own event.
+          Only rendered once a row id came back — without one, the interest
+          endpoint would have nothing to update.
         */}
-        <div className="mt-8 sm:mt-10">
-          <ProductInterest email={signedUpEmail} source={source} />
-        </div>
+        {signedUpId && (
+          <div className="mt-8 sm:mt-10">
+            <ProductInterest id={signedUpId} source={source} />
+          </div>
+        )}
       </div>
     );
   }

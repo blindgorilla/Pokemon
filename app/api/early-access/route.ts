@@ -5,12 +5,18 @@ import { isValidEmail, normalizeEmail } from "@/lib/validation";
 /**
  * Early-access signup endpoint.
  *
- * It validates the payload and stores the address in Supabase
- * (`early_access_signups`). The commented block further down is the single
- * integration point for a real email / CRM provider (ConvertKit, Beehiiv,
- * Mailchimp, Loops, Resend Audiences, …) — still inactive, and if it is ever
- * wired up it must not be able to fail the signup: storage happens first and
- * independently of any email delivery.
+ * It validates the payload and upserts the address into Supabase
+ * (`early_access_signups`), keyed on the table's unique `email` constraint —
+ * one visitor always maps to exactly one row, whether this is their first
+ * signup or a repeat. The row's id is returned to the client and carried
+ * into the product-interest step, so that step updates this same row instead
+ * of matching by email or creating a second one.
+ *
+ * The commented block further down is the single integration point for a
+ * real email / CRM provider (ConvertKit, Beehiiv, Mailchimp, Loops, Resend
+ * Audiences, …) — still inactive, and if it is ever wired up it must not be
+ * able to fail the signup: storage happens first and independently of any
+ * email delivery.
  *
  * Credentials are read from the environment only — never hard-code a key.
  * See `.env.example` for the expected variables.
@@ -20,9 +26,6 @@ type SignupPayload = {
   email?: unknown;
   source?: unknown;
 };
-
-/** Postgres unique-violation: the address is already on the list. */
-const UNIQUE_VIOLATION = "23505";
 
 export async function POST(request: Request) {
   let payload: SignupPayload;
@@ -47,20 +50,28 @@ export async function POST(request: Request) {
   const source = typeof payload.source === "string" ? payload.source : "unknown";
 
   // --- Storage: always first, and the only thing that can fail the signup ---
+  // Upsert on the unique `email` constraint: a repeat signup updates the
+  // existing row (and its `source`) rather than erroring or creating a
+  // second one. Either way the row's id comes back so the client can carry
+  // it into the product-interest step.
+  let id: string;
   try {
-    const { error } = await getSupabaseAdmin()
+    const { data, error } = await getSupabaseAdmin()
       .from("early_access_signups")
-      .insert({ email, source });
+      .upsert({ email, source }, { onConflict: "email" })
+      .select("id")
+      .single();
 
-    // Signing up twice is not a failure — the address is already on the list.
-    if (error && error.code !== UNIQUE_VIOLATION) {
+    if (error || !data) {
       // eslint-disable-next-line no-console
-      console.error("[early-access] supabase insert failed", error.message);
+      console.error("[early-access] supabase upsert failed", error?.message);
       return NextResponse.json(
         { ok: false, error: "storage_error" },
         { status: 500 },
       );
     }
+
+    id = data.id as string;
   } catch (cause) {
     // Missing configuration or a transport failure — same generic response.
     // eslint-disable-next-line no-console
@@ -97,5 +108,5 @@ export async function POST(request: Request) {
     console.log(`[early-access] signup received (${source}): ${email}`);
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, id });
 }
