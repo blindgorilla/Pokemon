@@ -38,12 +38,29 @@ export default function Hero() {
               </span>
             </h1>
 
+            {/* Credibility evidence — a specific personal result, not a
+                promise. Qualified immediately by the disclaimer below. */}
             <p className="mt-4 max-w-2xl text-[1.0625rem] leading-relaxed text-bone-200 sm:mt-5 sm:text-xl">
               {hero.body}
             </p>
 
-            {/* The one action on the page: the email field, right here. */}
-            <div className="mt-6 w-full max-w-xl sm:mt-7">
+            {/* The free-value line — what the sheet itself does for the
+                reader, kept visually lighter than the credibility line. */}
+            <p className="mt-2.5 max-w-2xl text-base leading-relaxed text-mute-400 sm:text-lg">
+              {hero.subBody}
+            </p>
+
+            <p className="mt-2.5 max-w-xl text-xs leading-relaxed text-mute-500">
+              {hero.disclaimer}
+            </p>
+
+            {/*
+              The idle form keeps the original max-w-xl width; the success
+              state (Stage A reward + Stage B invitation) is allowed to use
+              the full hero column instead, since Part 2 calls for a wider,
+              more substantial panel than a narrow vertical form.
+            */}
+            <div className="mt-6 w-full sm:mt-7">
               <EarlyAccessForm
                 source="hero"
                 submitLabel={hero.ctaLabel}

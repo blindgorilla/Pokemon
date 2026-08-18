@@ -128,55 +128,66 @@ export default function EarlyAccessForm({
 
   if (isSuccess) {
     return (
-      <div className={`panel w-full p-5 sm:p-6 ${className}`}>
-        {/* Beat one: the free sheet the visitor actually asked for. */}
-        <p className="flex items-center gap-2.5">
-          <span
-            aria-hidden="true"
-            className="inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
+      <div className={`w-full ${className}`}>
+        {/*
+          Stage A — the reward, on its own. Calm and uncluttered: a status
+          line, a headline, one line of use-guidance, one highly visible
+          button. Nothing about the paid Method appears here.
+        */}
+        <div className="panel w-full p-6 text-center sm:p-8 sm:text-left">
+          <p className="flex items-center justify-center gap-2.5 sm:justify-start">
+            <span
+              aria-hidden="true"
+              className="inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
+            >
+              ✓
+            </span>
+            <span className="eyebrow">{signupSuccess.eyebrow}</span>
+          </p>
+
+          <h3
+            role="status"
+            className="mt-3 text-2xl leading-snug font-semibold tracking-[-0.01em] text-bone-50 sm:text-3xl"
           >
-            ✓
-          </span>
-          <span className="eyebrow">{signupSuccess.eyebrow}</span>
-        </p>
+            {signupSuccess.headline}
+          </h3>
 
-        <h3
-          role="status"
-          className="mt-3 text-xl leading-snug font-semibold tracking-[-0.01em] text-bone-50 sm:text-2xl"
-        >
-          {signupSuccess.headline}
-        </h3>
+          <p className="mx-auto mt-2.5 max-w-md text-[0.9375rem] leading-relaxed text-bone-200 sm:mx-0 sm:max-w-none">
+            {signupSuccess.body}
+          </p>
 
-        <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-bone-200">
-          {signupSuccess.body}
-        </p>
+          {hasSheetPdf ? (
+            <a
+              href={sheetHref}
+              download
+              className="mt-5 inline-flex h-[3.5rem] w-full items-center justify-center rounded-xl bg-accent px-7 text-base font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:w-auto"
+            >
+              {signupSuccess.downloadLabel}
+            </a>
+          ) : (
+            <Link
+              href={sheetHref}
+              className="mt-5 inline-flex h-[3.5rem] w-full items-center justify-center rounded-xl bg-accent px-7 text-base font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:w-auto"
+            >
+              {signupSuccess.openLabel}
+            </Link>
+          )}
+        </div>
 
-        {hasSheetPdf ? (
-          <a
-            href={sheetHref}
-            download
-            className="mt-4 inline-flex h-[3.25rem] w-full items-center justify-center rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:w-auto sm:px-7"
-          >
-            {signupSuccess.downloadLabel}
-          </a>
-        ) : (
-          <Link
-            href={sheetHref}
-            className="mt-4 inline-flex h-[3.25rem] w-full items-center justify-center rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:w-auto sm:px-7"
-          >
-            {signupSuccess.openLabel}
-          </Link>
-        )}
-
-        {/* Beat two: a question about the paid Method — never a condition of
-            beat one, and measured as its own separate event. */}
-        <ProductInterest email={signedUpEmail} source={source} />
+        {/*
+          Generous separation, then Stage B — a large, separate premium
+          invitation, not a continuation of the reward panel above. It is
+          never a condition of Stage A and is measured as its own event.
+        */}
+        <div className="mt-8 sm:mt-10">
+          <ProductInterest email={signedUpEmail} source={source} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`w-full max-w-xl ${className}`}>
       <form onSubmit={handleSubmit} noValidate className="w-full">
         <label htmlFor={inputId} className="sr-only">
           {formCopy.label}
