@@ -19,12 +19,14 @@ export default function Hero() {
 
       <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-[5.5rem] sm:px-8 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36">
         {/*
-          Desktop: conversion copy (7/12) beside the collection photo (5/12).
-          Below lg it collapses to one column in the required reading order —
-          label, headline, copy, form, microcopy, photo, caption.
+          Desktop: the promise and the signup hold 61% on the left, the
+          photograph 39% on the right — and the photograph is capped well
+          inside its column so the headline stays the heaviest element.
+          Below lg it collapses to one column in the intended reading order:
+          label, headline, copy, form, microcopy, photo.
         */}
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
-          <div className="rise flex flex-col items-start lg:col-span-7">
+        <div className="grid gap-8 lg:grid-cols-[61fr_39fr] lg:items-center lg:gap-14">
+          <div className="rise flex flex-col items-start">
             <p className="hairline eyebrow rounded-full bg-white/[0.05] px-3 py-1.5 text-bone-200">
               {hero.eyebrow}
             </p>
@@ -53,11 +55,11 @@ export default function Hero() {
 
           {/*
             Authenticity visual: a real collection, carrying no verdict of its
-            own. Portrait source (3:4), so it is cropped compactly on mobile and
-            shown near-native on desktop — in both cases centred on the cards
-            and the hand rather than the sheet behind them.
+            own. The portrait source (1200x1600) is cropped past the empty
+            bedding at the top so the cards and the hand fill the frame — a
+            compact 4:3 on mobile, square on desktop.
           */}
-          <figure className="rise w-full max-w-xl [animation-delay:80ms] lg:col-span-5 lg:ml-auto lg:max-w-[27rem]">
+          <figure className="rise w-full max-w-md [animation-delay:80ms] lg:ml-auto lg:max-w-[22rem]">
             <div className="hairline relative overflow-hidden rounded-2xl bg-ink-900">
               <Image
                 src={hero.collection.image}
@@ -65,27 +67,37 @@ export default function Hero() {
                 width={1200}
                 height={1600}
                 priority
-                sizes="(min-width: 1024px) 27rem, (min-width: 640px) 36rem, 100vw"
-                className="aspect-[4/3] w-full object-cover [object-position:50%_58%] lg:aspect-[4/5] lg:[object-position:50%_50%]"
+                sizes="(min-width: 1024px) 22rem, (min-width: 640px) 28rem, 100vw"
+                className="aspect-[4/3] w-full object-cover [object-position:50%_58%] lg:aspect-square lg:[object-position:50%_74%]"
               />
-              {/* Seats the bright photo on the near-black page — edge only. */}
+
+              {/* Brand cue: one restrained gold hairline along the top edge. */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-ink-950/40 to-transparent"
+                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/45 to-transparent"
               />
-            </div>
-
-            <figcaption className="mt-3 flex items-center gap-2 text-[0.8125rem] leading-relaxed text-mute-500">
-              <span
+              {/* Seats the bright photo on the near-black page and keeps the
+                  plate below legible without darkening the cards themselves. */}
+              <div
                 aria-hidden="true"
-                className="h-1 w-1 flex-none rounded-full bg-accent"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink-950/70 to-transparent"
               />
-              {hero.collection.caption}
-            </figcaption>
+
+              <figcaption className="absolute bottom-3 left-3 rounded-lg border border-white/[0.12] border-l-2 border-l-accent bg-ink-950/75 px-2.5 py-1.5 backdrop-blur-[2px]">
+                <span className="block text-[0.5625rem] font-semibold tracking-[0.16em] text-accent uppercase">
+                  {hero.collection.label}
+                </span>
+                <span className="mt-0.5 block text-[0.75rem] leading-snug text-bone-200">
+                  {hero.collection.caption}
+                </span>
+              </figcaption>
+            </div>
           </figure>
         </div>
 
-        <div className="rise mt-8 [animation-delay:140ms] sm:mt-16">
+        {/* Kept close to the hero: proof should read as the next beat, not a
+            separate section. */}
+        <div className="rise mt-7 [animation-delay:140ms] sm:mt-10 lg:mt-12">
           <AnalysisDemo />
         </div>
       </div>

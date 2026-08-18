@@ -30,7 +30,7 @@ export const hero = {
   eyebrow: "Not sure which Pokémon card to buy?",
   headlineLead: "Know What to Buy.",
   headlineTrail: "Know When to Pass.",
-  body: "Use 8 simple checks to see if a Pokémon card is worth buying — and whether you should Buy, Negotiate, Wait or Pass.",
+  body: "Use 8 simple checks to decide if a Pokémon card is worth buying — and whether to Buy, Negotiate, Wait or Pass.",
   ctaLabel: "Get the Free Buy or Pass Sheet",
   formNote: "1-page decision sheet + BUY OR PASS early access.",
   /**
@@ -41,7 +41,10 @@ export const hero = {
   collection: {
     image: "/hero-collection.jpeg",
     alt: "A hand holding a fanned-out spread of Pokémon cards in protective sleeves, from a real personal collection.",
-    caption: "Real collection. Real buying decisions.",
+    // Sits as a plate inside the photo, so the claim reads as a caption of
+    // that collection rather than a floating line of page copy.
+    label: "Real Collection",
+    caption: "Real buying decisions.",
   },
 } as const;
 
