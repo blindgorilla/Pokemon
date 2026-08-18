@@ -50,23 +50,13 @@ export const hero = {
   },
 } as const;
 
-/**
- * The hero slab is a worked example overlaid on the collection photo: one
- * card's price, the decision it led to, and the four conclusions behind it.
- * Illustrative only — nothing here is live data or calculated for the visitor.
- */
-export const heroSlab = {
-  label: "WORKED EXAMPLE",
-  cert: "PSA 10 · #08429113",
-  price: "€1,850",
+/** The two small corner badges overlaid on the hero collection photo. */
+export const heroBadges = {
+  growth: {
+    stat: "€2,000 → €22,000",
+    caption: "in 12 months",
+  },
   decision: "BUY",
-  // Conclusions, not metrics — the reader should see price → factors → BUY.
-  factors: [
-    { label: "PRICE", value: "Fair" },
-    { label: "DEMAND", value: "Strong" },
-    { label: "LIQUIDITY", value: "High" },
-    { label: "SCARCITY", value: "Healthy" },
-  ],
 } as const;
 
 export const problem = {

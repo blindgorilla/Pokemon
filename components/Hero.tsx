@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import EarlyAccessForm from "@/components/EarlyAccessForm";
-import HeroSlab from "@/components/HeroSlab";
+import { BuyBadge, GrowthBadge } from "@/components/HeroBadges";
 import { hero, HERO_FIELD_ID } from "@/lib/content";
 
 const DISCLAIMER_ID = "hero-result-disclaimer";
@@ -77,8 +77,8 @@ export default function Hero() {
           </div>
 
           {/*
-            Authenticity visual: a real collection with the worked-example
-            slab tilted over its corner. The portrait source (1200x1600) is
+            Authenticity visual: a real collection, unobstructed except for
+            two small corner badges. The portrait source (1200x1600) is
             cropped past the empty bedding at the top so the cards and the
             hand fill the frame — a compact 4:3 on mobile, square on desktop.
           */}
@@ -100,13 +100,18 @@ export default function Hero() {
                 className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/45 to-transparent"
               />
               {/* Seats the bright photo on the near-black page and keeps the
-                  slab below legible without darkening the cards themselves. */}
+                  corner badges legible without darkening the cards. */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink-950/70 to-transparent"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink-950/60 to-transparent"
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-ink-950/50 to-transparent"
               />
 
-              <HeroSlab />
+              <GrowthBadge />
+              <BuyBadge />
             </div>
           </figure>
         </div>
