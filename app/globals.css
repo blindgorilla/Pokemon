@@ -23,6 +23,10 @@
   --color-accent-strong: #ffc766;
   --color-accent-dim: #6a4d16;
 
+  /* Warm gold used only by the hero's worked-example slab (badge + eyebrow
+     dot) — distinct from the site-wide CTA accent above. */
+  --color-slab-gold: #d8b573;
+
   --color-buy: #4ade80;
   --color-negotiate: #f0b23e;
   --color-wait: #62a8f5;
