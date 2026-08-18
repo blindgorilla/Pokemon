@@ -32,7 +32,7 @@ export const hero = {
   headlineTrail: "Know When to Pass.",
   body: "Use 8 simple checks to decide if a Pokémon card is worth buying — and whether to Buy, Negotiate, Wait or Pass.",
   ctaLabel: "Get the Free Buy or Pass Sheet",
-  formNote: "1-page decision sheet + BUY OR PASS early access.",
+  formNote: "Free 1-page decision sheet. No payment required.",
   /**
    * Authenticity visual only — a real personal collection, not a worked
    * example. It deliberately carries no decision/verdict: the BUY verdict
@@ -327,12 +327,57 @@ export const finalCta = {
 export const form = {
   label: "Email address",
   placeholder: "Enter your email",
-  successMessage: "You're in. Here's your free checklist.",
-  successCtaLabel: "View the Checklist",
-  successCtaHref: "/checklist",
   invalidMessage: "Please enter a valid email address.",
   errorMessage: "Something went wrong. Please try again in a moment.",
+  /** Announced to screen readers the moment the signup succeeds. */
+  successMessage: "Your Buy or Pass Sheet is ready.",
 } as const;
+
+/**
+ * Post-signup state. Two beats, deliberately separate:
+ *
+ *   1. deliver the free sheet — the thing the visitor actually asked for;
+ *   2. ask, once, whether the future paid Method interests them.
+ *
+ * The second beat is a question, never a condition of the first. Nothing here
+ * takes payment: it exists purely so `free_sheet_signup` (people who wanted a
+ * free Pokémon tool) can be told apart from `paid_product_interest_yes`
+ * (people who want the €39 Method).
+ */
+export const signupSuccess = {
+  eyebrow: "Success",
+  headline: "Your Buy or Pass Sheet is ready.",
+  body: "It walks through all 8 checks — Price, Liquidity, Trend, Scarcity, Demand, Desirability, Grade and Risk & Reward — so you know exactly what to look at before you commit money to a card.",
+  /** Used when no PDF is configured; the sheet is served as a page instead. */
+  openLabel: "Open the Free Buy or Pass Sheet",
+  openHref: "/checklist",
+  /** Used once NEXT_PUBLIC_SHEET_PDF_URL points at a real file. */
+  downloadLabel: "Download the Free Buy or Pass Sheet",
+} as const;
+
+/**
+ * The free sheet teaches WHAT to check. The Method teaches HOW to research and
+ * interpret each check. Externally it is only ever "the BUY OR PASS Method" —
+ * never a course.
+ */
+export const productInterest = {
+  eyebrow: "One quick question",
+  intro:
+    "I'm also building the full BUY OR PASS Method — a short practical guide showing how to research price, liquidity, population, demand, grading and risk before deciding whether to Buy, Negotiate, Wait or Pass.",
+  priceLabel: "Expected launch price",
+  priceValue: "€39",
+  question: "Would you be interested in the full BUY OR PASS Method?",
+  options: [
+    { value: "yes", lead: "Yes", label: "I want first access" },
+    { value: "maybe", lead: "Maybe", label: "Tell me more" },
+    { value: "no", lead: "No", label: "I just wanted the free sheet" },
+  ],
+  acknowledgement: "Thanks — that helps shape what I build next.",
+} as const;
+
+/** `yes` | `maybe` | `no` — persisted as `product_interest` on the signup row. */
+export type ProductInterestValue =
+  (typeof productInterest.options)[number]["value"];
 
 /** Copy for the /checklist worksheet — the reward granted after signup. */
 export const checklist = {

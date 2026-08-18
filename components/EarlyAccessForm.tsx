@@ -3,8 +3,10 @@
 import { useCallback, useId, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { track } from "@/lib/analytics";
+import ProductInterest from "@/components/ProductInterest";
+import { hasSheetPdf, sheetHref } from "@/lib/sheet";
 import { isValidEmail, MAX_EMAIL_LENGTH } from "@/lib/validation";
-import { form as formCopy } from "@/lib/content";
+import { form as formCopy, signupSuccess } from "@/lib/content";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -41,6 +43,8 @@ export default function EarlyAccessForm({
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  /** Held so the interest answer can be stored against the same address. */
+  const [signedUpEmail, setSignedUpEmail] = useState("");
 
   // Refs (not state) so the guards apply immediately, before React re-renders.
   const inFlightRef = useRef(false);
@@ -83,11 +87,13 @@ export default function EarlyAccessForm({
     setStatus("loading");
     setMessage("");
 
+    const trimmed = email.trim();
+
     try {
       const response = await fetch("/api/early-access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), source }),
+        body: JSON.stringify({ email: trimmed, source }),
       });
 
       const data: { ok?: boolean; error?: string } = await response
@@ -99,17 +105,18 @@ export default function EarlyAccessForm({
         setMessage(
           response.status === 400 ? formCopy.invalidMessage : formCopy.errorMessage,
         );
-        track("early_access_error", { source, status: response.status });
+        track("free_sheet_error", { source, status: response.status });
         return;
       }
 
       setStatus("success");
       setMessage(formCopy.successMessage);
-      track("early_access_signup", { source });
+      setSignedUpEmail(trimmed);
+      track("free_sheet_signup", { source });
     } catch {
       setStatus("error");
       setMessage(formCopy.errorMessage);
-      track("early_access_error", { source, status: "network" });
+      track("free_sheet_error", { source, status: "network" });
     } finally {
       inFlightRef.current = false;
     }
@@ -121,26 +128,49 @@ export default function EarlyAccessForm({
 
   if (isSuccess) {
     return (
-      <div className={`w-full ${className}`}>
-        <p
-          role="status"
-          className="panel flex items-start gap-3 px-5 py-4 text-[0.9375rem] leading-relaxed text-bone-50"
-        >
+      <div className={`panel w-full p-5 sm:p-6 ${className}`}>
+        {/* Beat one: the free sheet the visitor actually asked for. */}
+        <p className="flex items-center gap-2.5">
           <span
             aria-hidden="true"
-            className="mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
+            className="inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
           >
             ✓
           </span>
-          {formCopy.successMessage}
+          <span className="eyebrow">{signupSuccess.eyebrow}</span>
         </p>
 
-        <Link
-          href={formCopy.successCtaHref}
-          className="mt-3 inline-flex h-[3.25rem] items-center justify-center rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:px-7"
+        <h3
+          role="status"
+          className="mt-3 text-xl leading-snug font-semibold tracking-[-0.01em] text-bone-50 sm:text-2xl"
         >
-          {formCopy.successCtaLabel}
-        </Link>
+          {signupSuccess.headline}
+        </h3>
+
+        <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-bone-200">
+          {signupSuccess.body}
+        </p>
+
+        {hasSheetPdf ? (
+          <a
+            href={sheetHref}
+            download
+            className="mt-4 inline-flex h-[3.25rem] w-full items-center justify-center rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:w-auto sm:px-7"
+          >
+            {signupSuccess.downloadLabel}
+          </a>
+        ) : (
+          <Link
+            href={sheetHref}
+            className="mt-4 inline-flex h-[3.25rem] w-full items-center justify-center rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] sm:w-auto sm:px-7"
+          >
+            {signupSuccess.openLabel}
+          </Link>
+        )}
+
+        {/* Beat two: a question about the paid Method — never a condition of
+            beat one, and measured as its own separate event. */}
+        <ProductInterest email={signedUpEmail} source={source} />
       </div>
     );
   }
