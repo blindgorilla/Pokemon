@@ -27,57 +27,36 @@ export const nav = {
 } as const;
 
 export const hero = {
-  eyebrow: "Not sure which Pokémon card to buy?",
-  headlineLead: "Know What to Buy.",
-  headlineTrail: "Know When to Pass.",
-  // Credibility evidence, not a promise: a specific, verifiable personal
-  // result, immediately qualified by hero.disclaimer below.
-  body: "Use the same 8-part decision process I developed while building a Pokémon card portfolio valued at €15K+ from roughly €5K invested.",
-  // The free-value line — what the sheet itself does for the reader.
-  subBody: "Learn what to check before you buy, grade, hold or walk away from a card.",
+  eyebrow: 'Found a card. Now you’re stuck asking “is this actually worth it?”',
+  headlineLead: "Buy or Pass.",
+  headlineTrail: "Know before you spend.",
+  // The one subhead line: credibility evidence + the free-value promise in a
+  // single sentence. The specific result is qualified by hero.disclaimer,
+  // surfaced as a tooltip right next to the claim rather than a standalone
+  // paragraph.
+  body: "The 8-question checklist I used to turn €2,000 into €22,000 in 12 months",
   disclaimer:
     "Personal historical results. Collectible values fluctuate and future results are not guaranteed.",
-  ctaLabel: "Get My Free Buy or Pass Sheet",
-  formNote: "Free · 1 page · Use it before your next card purchase",
+  ctaLabel: "Get My Free Sheet",
+  formNote: "Free · 1-page cheat sheet · No spam",
   /**
    * Authenticity visual only — a real personal collection, not a worked
    * example. It deliberately carries no decision/verdict: the BUY verdict
-   * belongs to the single-card analysis demo below the hero.
+   * belongs to the slab overlay in front of it.
    */
   collection: {
     image: "/hero-collection.jpeg",
     alt: "A hand holding a fanned-out spread of Pokémon cards in protective sleeves, from a real personal collection.",
-    // Sits as a plate inside the photo, so the claim reads as a caption of
-    // that collection rather than a floating line of page copy.
-    label: "Real Collection",
-    caption: "Real buying decisions.",
   },
 } as const;
 
-/**
- * The hero demo is a worked example: one card, the decision it led to, and the
- * four conclusions behind it. Illustrative only — nothing here is live data and
- * nothing is calculated for the visitor.
- */
-export const analysisDemo = {
-  title: "€1,850 — BUY OR PASS?",
-  status: "WORKED EXAMPLE",
-  cardImage: "/example-card.jpeg",
-  cardAlt:
-    "A graded Pokémon card in its slab — the card being evaluated in this example.",
-  cardLabel: "THE CARD",
-  decisionLabel: "DECISION",
+/** The two small corner badges overlaid on the hero collection photo. */
+export const heroBadges = {
+  growth: {
+    stat: "€2,000 → €22,000",
+    caption: "in 12 months",
+  },
   decision: "BUY",
-  caption: "Strong fundamentals. Good entry price.",
-  // Conclusions, not metrics — the reader should see card → factors → BUY.
-  factors: [
-    { label: "Price", value: "Fair" },
-    { label: "Demand", value: "Strong" },
-    { label: "Liquidity", value: "High" },
-    { label: "Scarcity", value: "Healthy" },
-  ],
-  figureCaption:
-    "Example showing how the BUY OR PASS framework is applied to a card.",
 } as const;
 
 export const problem = {

@@ -1,9 +1,31 @@
 import type { Metadata, Viewport } from "next";
+import { Fraunces, IBM_Plex_Mono, Inter } from "next/font/google";
 // Aliased so `Analytics` never reads as this project's own analytics helper.
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import PageViewTracker from "@/components/PageViewTracker";
 import { site } from "@/lib/content";
 import "./globals.css";
+
+// Loaded site-wide (next/font requires this at the root) but only ever
+// referenced from the hero via CSS variables — every other section keeps
+// the existing system-font stack untouched.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["500"],
+  variable: "--font-plex-mono",
+  display: "swap",
+});
 
 const title = "BUY OR PASS | Pokémon Card Decision System";
 const description =
@@ -49,7 +71,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="min-h-dvh antialiased">
+      <body
+        className={`min-h-dvh antialiased ${fraunces.variable} ${inter.variable} ${plexMono.variable}`}
+      >
         <PageViewTracker />
         {children}
         <VercelAnalytics />

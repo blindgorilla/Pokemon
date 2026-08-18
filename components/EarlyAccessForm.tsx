@@ -23,6 +23,8 @@ type EarlyAccessFormProps = {
   fieldId?: string;
   /** Line shown under the form, before the privacy link. */
   note?: string;
+  /** Makes the submit button full-width below `sm`, instead of content-fit. */
+  fullWidthSubmit?: boolean;
 };
 
 /** Ignore repeat submits fired within this window (double-tap / double-click). */
@@ -35,6 +37,7 @@ export default function EarlyAccessForm({
   className = "",
   fieldId,
   note = "We only use your email for launch updates.",
+  fullWidthSubmit = false,
 }: EarlyAccessFormProps) {
   const generatedId = useId();
   const inputId = fieldId ?? generatedId;
@@ -225,7 +228,9 @@ export default function EarlyAccessForm({
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex h-[3.25rem] flex-none items-center justify-center gap-2 rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 sm:px-7"
+            className={`inline-flex h-[3.25rem] items-center justify-center gap-2 rounded-xl bg-accent px-6 text-[0.9375rem] font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 sm:px-7 ${
+              fullWidthSubmit ? "w-full sm:w-auto sm:flex-none" : "flex-none"
+            }`}
           >
             {isLoading ? (
               <>
