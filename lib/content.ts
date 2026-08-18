@@ -33,6 +33,16 @@ export const hero = {
   body: "Use 8 simple checks to see if a Pokémon card is worth buying — and whether you should Buy, Negotiate, Wait or Pass.",
   ctaLabel: "Get the Free Buy or Pass Sheet",
   formNote: "1-page decision sheet + BUY OR PASS early access.",
+  /**
+   * Authenticity visual only — a real personal collection, not a worked
+   * example. It deliberately carries no decision/verdict: the BUY verdict
+   * belongs to the single-card analysis demo below the hero.
+   */
+  collection: {
+    image: "/hero-collection.jpeg",
+    alt: "A hand holding a fanned-out spread of Pokémon cards in protective sleeves, from a real personal collection.",
+    caption: "Real collection. Real buying decisions.",
+  },
 } as const;
 
 /**
