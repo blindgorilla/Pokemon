@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { sheetExample } from "@/lib/content";
 
 /**
@@ -49,6 +50,16 @@ export default function SheetExample() {
         <span className="text-[0.8125rem] leading-relaxed text-mute-400">
           {sheetExample.verdict.note}
         </span>
+      </div>
+
+      <div className="mt-6 flex flex-col items-start gap-3 border-t border-white/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm font-semibold text-bone-50">{sheetExample.checklistPrompt.headline}</p>
+        <Link
+          href={sheetExample.checklistPrompt.href}
+          className="inline-flex h-11 flex-none items-center justify-center rounded-xl bg-accent px-5 text-sm font-semibold text-ink-950 transition duration-200 ease-out hover:bg-accent-strong active:scale-[0.99]"
+        >
+          {sheetExample.checklistPrompt.cta}
+        </Link>
       </div>
 
       <div className="mt-6 flex flex-col items-start gap-3 border-t border-white/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-between">

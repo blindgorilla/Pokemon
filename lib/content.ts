@@ -29,7 +29,7 @@ export const nav = {
 export const hero = {
   eyebrow: "Free · I check every submission personally · Reply in 24–48h",
   headlineLead: "Ask before you buy.",
-  headlineTrail: "I’ll tell you what I see.",
+  headlineTrail: "I’ll tell you Buy or Pass.",
   // The one subhead line: credibility evidence + the offer, in a single
   // sentence. The specific result is qualified by hero.disclaimer, surfaced
   // as a tooltip right next to the claim rather than a standalone paragraph.
@@ -80,10 +80,9 @@ export const askForm = {
 /**
  * The worked-example sheet shown on the confirmation screen and mirrored
  * (in simplified form) in the confirmation email. It illustrates the 8-part
- * method on a sample card — never the visitor's own card, which is checked
- * personally and answered by email. Five checks are "filled" with an example
- * finding; the rest are teased, matching the tease-then-reveal pattern used
- * for the framework cards elsewhere on the page.
+ * method on a real card — never the visitor's own card, which is checked
+ * personally and answered by email. All eight checks are filled with real
+ * findings; this is a complete example, not a teaser.
  */
 export type SheetCheck = {
   number: string;
@@ -95,45 +94,73 @@ export type SheetCheck = {
 
 export const sheetExample = {
   eyebrow: "While you wait, here's what I check",
-  sampleCardLabel: "Example: 1999 Base Set Charizard, PSA 9",
+  sampleCardLabel:
+    "Example: Red & Pikachu (Sun & Moon era, 2019, English, standard pull — not a promo)",
   checks: [
     {
       number: "01",
       title: "PRICE",
       filled: true,
-      exampleFinding: "Recent sales cluster near €1,650 — the €2,100 asking price runs hot.",
+      exampleFinding: "$2,600 — Fair entry point for this tier of card.",
     },
     {
       number: "02",
-      title: "LIQUIDITY",
+      title: "GRADING DIFFICULTY",
       filled: true,
-      exampleFinding: "Sells multiple times a month — easy to exit later.",
+      exampleFinding:
+        "About 1 in 3 (3,769 PSA 10 vs 8,311 PSA 9) — Most graded copies come back a 9, not a 10. That scarcity is exactly what keeps a real 10 valuable.",
     },
     {
       number: "03",
-      title: "TREND",
+      title: "LANGUAGE",
       filled: true,
-      exampleFinding: "Up steadily over 18 months, not a recent spike.",
+      exampleFinding:
+        "English — Deepest buyer pool — easiest to resell later, no niche-market discount.",
     },
     {
       number: "04",
-      title: "SCARCITY",
+      title: "CHARACTER PAIRING",
       filled: true,
-      exampleFinding: "PSA population is low relative to raw supply still in circulation.",
+      exampleFinding:
+        "Red & Pikachu together — Very few cards pair a named trainer with Pikachu — that specific combo drives demand beyond “it has Pikachu on it.”",
     },
     {
       number: "05",
-      title: "DEMAND",
+      title: "SET & ERA",
       filled: true,
-      exampleFinding: "Consistently one of the most-searched cards in the set.",
+      exampleFinding:
+        "Sun & Moon, 2019 — Already known as an expensive set to complete — cards from it tend to hold value because the whole set has demand, not just single cards.",
     },
-    { number: "06", title: "DESIRABILITY", filled: false },
-    { number: "07", title: "GRADE", filled: false },
-    { number: "08", title: "RISK & REWARD", filled: false },
+    {
+      number: "06",
+      title: "PRINT RUN SIZE",
+      filled: true,
+      exampleFinding:
+        "~12,000 known graded copies — Total PSA population gives a read on how many copies likely exist overall — this is a contained number, not mass-market.",
+    },
+    {
+      number: "07",
+      title: "PROMO STATUS",
+      filled: true,
+      exampleFinding:
+        "Standard pull, not a promo — No promo-box-specific verification needed — this went through standard retail distribution.",
+    },
+    {
+      number: "08",
+      title: "PRINT/BOX QUALITY",
+      filled: true,
+      exampleFinding:
+        "Sun & Moon is known for whiting issues — Genuinely hard to grade clean — which is exactly why the 10-rate in Check 2 is low, not just unlucky grading.",
+    },
   ] satisfies SheetCheck[],
   verdict: {
     label: "BUY",
     note: "Example verdict for the sample card above — yours arrives by email.",
+  },
+  checklistPrompt: {
+    headline: "Want to see the full 8-question process now, instead of waiting?",
+    cta: "Read the Full Method",
+    href: "/checklist",
   },
   hook: {
     headline: "Got a card you're deciding on?",
