@@ -10,8 +10,8 @@ export const site = {
   url: "https://buyorpass.vercel.app",
 } as const;
 
-/** Fragment id of the hero email field — the single target for every nav CTA. */
-export const HERO_FIELD_ID = "get-the-sheet";
+/** Fragment id of the hero card-name field — the single target for every nav CTA. */
+export const HERO_FIELD_ID = "ask-card-name";
 
 export const nav = {
   // Absolute hashes so the same nav works from /privacy as well as the home page.
@@ -21,24 +21,21 @@ export const nav = {
   ],
   // Points at the hero field itself so the link both scrolls and focuses it.
   cta: {
-    label: "Get the Free Buy or Pass Sheet",
+    label: "Ask Before You Buy",
     href: `/#${HERO_FIELD_ID}`,
   },
 } as const;
 
 export const hero = {
-  eyebrow: 'Found a card. Now you’re stuck asking “is this actually worth it?”',
-  headlineLead: "Buy or Pass.",
-  headlineTrail: "Know before you spend.",
-  // The one subhead line: credibility evidence + the free-value promise in a
-  // single sentence. The specific result is qualified by hero.disclaimer,
-  // surfaced as a tooltip right next to the claim rather than a standalone
-  // paragraph.
-  body: "The 8-question checklist I used to turn €2,000 into €22,000 in 12 months",
+  eyebrow: "Free · I check every submission personally · Reply in 24–48h",
+  headlineLead: "Ask before you buy.",
+  headlineTrail: "I’ll tell you Buy or Pass.",
+  // The one subhead line: credibility evidence + the offer, in a single
+  // sentence. The specific result is qualified by hero.disclaimer, surfaced
+  // as a tooltip right next to the claim rather than a standalone paragraph.
+  body: "Tell me the Pokémon card and the price you're seeing. I'll run it through the same 8-question process that took my own collection from €2,000 to €22,000",
   disclaimer:
     "Personal historical results. Collectible values fluctuate and future results are not guaranteed.",
-  ctaLabel: "Get My Free Sheet",
-  formNote: "Free · 1-page cheat sheet · No spam",
   /**
    * Authenticity visual only — a real personal collection, not a worked
    * example. It deliberately carries no decision/verdict: the BUY verdict
@@ -47,6 +44,128 @@ export const hero = {
   collection: {
     image: "/hero-collection.jpeg",
     alt: "A hand holding a fanned-out spread of Pokémon cards in protective sleeves, from a real personal collection.",
+  },
+} as const;
+
+/**
+ * Copy for the two-step "Ask before you buy" hero form and its on-screen
+ * confirmation. See components/CardCheckForm.tsx.
+ */
+export const askForm = {
+  step1: {
+    label: "Card name",
+    placeholder: "e.g. Charizard VMAX Rainbow Rare",
+    submitLabel: "Ask About This Card",
+    requiredError: "Enter a card name first.",
+  },
+  step2: {
+    // {cardName} is substituted at render time.
+    headerTemplate: (cardName: string) =>
+      `Got it — ${cardName}. What price are you seeing, and where should I send my answer?`,
+    priceLabel: "Price you're seeing",
+    pricePlaceholder: "e.g. €450 or $500",
+    priceRequiredError: "Enter the price you're seeing.",
+    emailLabel: "Email address",
+    emailPlaceholder: "you@example.com",
+    emailInvalidError: "Please enter a valid email address.",
+    submitLabel: "Submit My Card Check",
+  },
+  confirmation: {
+    headerTemplate: (cardName: string) =>
+      `Got it — I'll personally check ${cardName} and reply within 24–48 hours.`,
+  },
+  genericErrorMessage: "Something went wrong. Please try again in a moment.",
+} as const;
+
+/**
+ * The worked-example sheet shown on the confirmation screen and mirrored
+ * (in simplified form) in the confirmation email. It illustrates the 8-part
+ * method on a real card — never the visitor's own card, which is checked
+ * personally and answered by email. All eight checks are filled with real
+ * findings; this is a complete example, not a teaser.
+ */
+export type SheetCheck = {
+  number: string;
+  title: string;
+  filled: boolean;
+  /** Shown only when filled. */
+  exampleFinding?: string;
+};
+
+export const sheetExample = {
+  eyebrow: "While you wait, here's what I check",
+  sampleCardLabel:
+    "Example: Red & Pikachu (Sun & Moon era, 2019, English, standard pull — not a promo)",
+  checks: [
+    {
+      number: "01",
+      title: "PRICE",
+      filled: true,
+      exampleFinding: "$2,600 — Fair entry point for this tier of card.",
+    },
+    {
+      number: "02",
+      title: "GRADING DIFFICULTY",
+      filled: true,
+      exampleFinding:
+        "About 1 in 3 (3,769 PSA 10 vs 8,311 PSA 9) — Most graded copies come back a 9, not a 10. That scarcity is exactly what keeps a real 10 valuable.",
+    },
+    {
+      number: "03",
+      title: "LANGUAGE",
+      filled: true,
+      exampleFinding:
+        "English — Deepest buyer pool — easiest to resell later, no niche-market discount.",
+    },
+    {
+      number: "04",
+      title: "CHARACTER PAIRING",
+      filled: true,
+      exampleFinding:
+        "Red & Pikachu together — Very few cards pair a named trainer with Pikachu — that specific combo drives demand beyond “it has Pikachu on it.”",
+    },
+    {
+      number: "05",
+      title: "SET & ERA",
+      filled: true,
+      exampleFinding:
+        "Sun & Moon, 2019 — Already known as an expensive set to complete — cards from it tend to hold value because the whole set has demand, not just single cards.",
+    },
+    {
+      number: "06",
+      title: "PRINT RUN SIZE",
+      filled: true,
+      exampleFinding:
+        "~12,000 known graded copies — Total PSA population gives a read on how many copies likely exist overall — this is a contained number, not mass-market.",
+    },
+    {
+      number: "07",
+      title: "PROMO STATUS",
+      filled: true,
+      exampleFinding:
+        "Standard pull, not a promo — No promo-box-specific verification needed — this went through standard retail distribution.",
+    },
+    {
+      number: "08",
+      title: "PRINT/BOX QUALITY",
+      filled: true,
+      exampleFinding:
+        "Sun & Moon is known for whiting issues — Genuinely hard to grade clean — which is exactly why the 10-rate in Check 2 is low, not just unlucky grading.",
+    },
+  ] satisfies SheetCheck[],
+  verdict: {
+    label: "BUY",
+    note: "Example verdict for the sample card above — yours arrives by email.",
+  },
+  checklistPrompt: {
+    headline: "Want to see the full 8-question process now, instead of waiting?",
+    cta: "Read the Full Method",
+    href: "/checklist",
+  },
+  hook: {
+    headline: "Got a card you're deciding on?",
+    body: "Every submission gets the same 8-question check, run by hand.",
+    cta: "Check submitted ✓",
   },
 } as const;
 

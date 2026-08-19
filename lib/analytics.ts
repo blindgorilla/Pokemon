@@ -28,7 +28,10 @@ export type AnalyticsEvent =
   | "free_sheet_error"
   | "paid_product_interest_yes"
   | "paid_product_interest_maybe"
-  | "paid_product_interest_no";
+  | "paid_product_interest_no"
+  | "card_check_started"
+  | "card_check_submitted"
+  | "card_check_error";
 
 export type AnalyticsProps = Record<string, string | number | boolean | undefined>;
 

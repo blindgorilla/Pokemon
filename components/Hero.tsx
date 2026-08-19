@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import EarlyAccessForm from "@/components/EarlyAccessForm";
+import CardCheckForm from "@/components/CardCheckForm";
 import { BuyBadge, GrowthBadge } from "@/components/HeroBadges";
 import { hero, HERO_FIELD_ID } from "@/lib/content";
 
@@ -66,13 +66,7 @@ export default function Hero() {
             </p>
 
             <div className="mt-6 w-full sm:mt-7">
-              <EarlyAccessForm
-                source="hero"
-                submitLabel={hero.ctaLabel}
-                fieldId={HERO_FIELD_ID}
-                note={hero.formNote}
-                fullWidthSubmit
-              />
+              <CardCheckForm source="hero" fieldId={HERO_FIELD_ID} />
             </div>
           </div>
 
