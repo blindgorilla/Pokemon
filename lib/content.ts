@@ -33,7 +33,7 @@ export const hero = {
   // The one subhead line: credibility evidence + the offer, in a single
   // sentence. The specific result is qualified by hero.disclaimer, surfaced
   // as a tooltip right next to the claim rather than a standalone paragraph.
-  body: "Tell me the card and the price you're seeing. I'll run it through the same 8-question process that took my own collection from €2,000 to €22,000",
+  body: "Tell me the Pokémon card and the price you're seeing. I'll run it through the same 8-question process that took my own collection from €2,000 to €22,000",
   disclaimer:
     "Personal historical results. Collectible values fluctuate and future results are not guaranteed.",
   /**
