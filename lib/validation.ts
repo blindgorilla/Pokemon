@@ -19,3 +19,8 @@ export function isValidEmail(value: unknown): value is string {
 export function normalizeEmail(value: string): string {
   return value.trim().toLowerCase();
 }
+
+/** True for any non-empty string once whitespace is trimmed. */
+export function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}

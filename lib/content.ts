@@ -10,8 +10,8 @@ export const site = {
   url: "https://buyorpass.vercel.app",
 } as const;
 
-/** Fragment id of the hero email field — the single target for every nav CTA. */
-export const HERO_FIELD_ID = "get-the-sheet";
+/** Fragment id of the hero card-name field — the single target for every nav CTA. */
+export const HERO_FIELD_ID = "ask-card-name";
 
 export const nav = {
   // Absolute hashes so the same nav works from /privacy as well as the home page.
@@ -21,24 +21,21 @@ export const nav = {
   ],
   // Points at the hero field itself so the link both scrolls and focuses it.
   cta: {
-    label: "Get the Free Buy or Pass Sheet",
+    label: "Ask Before You Buy",
     href: `/#${HERO_FIELD_ID}`,
   },
 } as const;
 
 export const hero = {
-  eyebrow: 'Found a card. Now you’re stuck asking “is this actually worth it?”',
-  headlineLead: "Buy or Pass.",
-  headlineTrail: "Know before you spend.",
-  // The one subhead line: credibility evidence + the free-value promise in a
-  // single sentence. The specific result is qualified by hero.disclaimer,
-  // surfaced as a tooltip right next to the claim rather than a standalone
-  // paragraph.
-  body: "The 8-question checklist I used to turn €2,000 into €22,000 in 12 months",
+  eyebrow: "Free · I check every submission personally · Reply in 24–48h",
+  headlineLead: "Ask before you buy.",
+  headlineTrail: "I’ll tell you what I see.",
+  // The one subhead line: credibility evidence + the offer, in a single
+  // sentence. The specific result is qualified by hero.disclaimer, surfaced
+  // as a tooltip right next to the claim rather than a standalone paragraph.
+  body: "Tell me the card and the price you're seeing. I'll run it through the same 8-question process that took my own collection from €2,000 to €22,000",
   disclaimer:
     "Personal historical results. Collectible values fluctuate and future results are not guaranteed.",
-  ctaLabel: "Get My Free Sheet",
-  formNote: "Free · 1-page cheat sheet · No spam",
   /**
    * Authenticity visual only — a real personal collection, not a worked
    * example. It deliberately carries no decision/verdict: the BUY verdict
@@ -47,6 +44,101 @@ export const hero = {
   collection: {
     image: "/hero-collection.jpeg",
     alt: "A hand holding a fanned-out spread of Pokémon cards in protective sleeves, from a real personal collection.",
+  },
+} as const;
+
+/**
+ * Copy for the two-step "Ask before you buy" hero form and its on-screen
+ * confirmation. See components/CardCheckForm.tsx.
+ */
+export const askForm = {
+  step1: {
+    label: "Card name",
+    placeholder: "e.g. Charizard VMAX Rainbow Rare",
+    submitLabel: "Ask About This Card",
+    requiredError: "Enter a card name first.",
+  },
+  step2: {
+    // {cardName} is substituted at render time.
+    headerTemplate: (cardName: string) =>
+      `Got it — ${cardName}. What price are you seeing, and where should I send my answer?`,
+    priceLabel: "Price you're seeing",
+    pricePlaceholder: "e.g. €450 or $500",
+    priceRequiredError: "Enter the price you're seeing.",
+    emailLabel: "Email address",
+    emailPlaceholder: "you@example.com",
+    emailInvalidError: "Please enter a valid email address.",
+    submitLabel: "Submit My Card Check",
+  },
+  confirmation: {
+    headerTemplate: (cardName: string) =>
+      `Got it — I'll personally check ${cardName} and reply within 24–48 hours.`,
+  },
+  genericErrorMessage: "Something went wrong. Please try again in a moment.",
+} as const;
+
+/**
+ * The worked-example sheet shown on the confirmation screen and mirrored
+ * (in simplified form) in the confirmation email. It illustrates the 8-part
+ * method on a sample card — never the visitor's own card, which is checked
+ * personally and answered by email. Five checks are "filled" with an example
+ * finding; the rest are teased, matching the tease-then-reveal pattern used
+ * for the framework cards elsewhere on the page.
+ */
+export type SheetCheck = {
+  number: string;
+  title: string;
+  filled: boolean;
+  /** Shown only when filled. */
+  exampleFinding?: string;
+};
+
+export const sheetExample = {
+  eyebrow: "While you wait, here's what I check",
+  sampleCardLabel: "Example: 1999 Base Set Charizard, PSA 9",
+  checks: [
+    {
+      number: "01",
+      title: "PRICE",
+      filled: true,
+      exampleFinding: "Recent sales cluster near €1,650 — the €2,100 asking price runs hot.",
+    },
+    {
+      number: "02",
+      title: "LIQUIDITY",
+      filled: true,
+      exampleFinding: "Sells multiple times a month — easy to exit later.",
+    },
+    {
+      number: "03",
+      title: "TREND",
+      filled: true,
+      exampleFinding: "Up steadily over 18 months, not a recent spike.",
+    },
+    {
+      number: "04",
+      title: "SCARCITY",
+      filled: true,
+      exampleFinding: "PSA population is low relative to raw supply still in circulation.",
+    },
+    {
+      number: "05",
+      title: "DEMAND",
+      filled: true,
+      exampleFinding: "Consistently one of the most-searched cards in the set.",
+    },
+    { number: "06", title: "DESIRABILITY", filled: false },
+    { number: "07", title: "GRADE", filled: false },
+    { number: "08", title: "RISK & REWARD", filled: false },
+  ] satisfies SheetCheck[],
+  verdict: {
+    label: "BUY",
+    note: "Example verdict for the sample card above — yours arrives by email.",
+  },
+  hook: {
+    headline: "Got a card you're deciding on?",
+    body: "Every submission gets the same 8-question check, run by hand.",
+    cta: "Check submitted ✓",
   },
 } as const;
 
