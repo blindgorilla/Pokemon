@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { sheetExample } from "@/lib/content";
 
@@ -8,15 +9,33 @@ import { sheetExample } from "@/lib/content";
  */
 export default function SheetExample() {
   return (
-    <div className="panel mt-6 p-5 sm:p-7">
+    <div className="panel mt-6 p-4 sm:p-7">
       <p className="eyebrow">{sheetExample.eyebrow}</p>
-      <p className="mt-2 text-sm text-mute-400">{sheetExample.sampleCardLabel}</p>
+
+      {/*
+        Real photo of the sample card, stacked above the checklist on mobile
+        and set alongside it from sm up — a visual anchor for the 8 checks
+        below, in the same spirit as the hero photo next to its badges.
+      */}
+      <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+        <div className="hairline relative mx-auto w-32 flex-none overflow-hidden rounded-xl bg-ink-900 sm:mx-0 sm:w-40">
+          <Image
+            src={sheetExample.cardPhoto.src}
+            alt={sheetExample.cardPhoto.alt}
+            width={sheetExample.cardPhoto.width}
+            height={sheetExample.cardPhoto.height}
+            sizes="(min-width: 640px) 10rem, 8rem"
+            className="w-full object-cover"
+          />
+        </div>
+        <p className="text-sm text-mute-400 sm:pt-1">{sheetExample.sampleCardLabel}</p>
+      </div>
 
       <ul className="mt-5 flex flex-col gap-2.5">
         {sheetExample.checks.map((check) => (
           <li
             key={check.number}
-            className={`hairline flex items-start gap-3 rounded-xl px-3.5 py-3 ${
+            className={`hairline flex items-start gap-3 rounded-xl px-3 py-3 sm:px-3.5 ${
               check.filled ? "bg-white/[0.03]" : "bg-transparent"
             }`}
           >
@@ -34,7 +53,7 @@ export default function SheetExample() {
               <p className="text-[0.8125rem] font-semibold tracking-[0.06em] text-bone-50">
                 {check.number} · {check.title}
               </p>
-              <p className="mt-1 text-[0.8125rem] leading-relaxed text-mute-400">
+              <p className="mt-1 text-[0.8125rem] leading-relaxed text-mute-400 break-words">
                 {check.filled ? check.exampleFinding : "Checked personally for every card."}
               </p>
             </div>

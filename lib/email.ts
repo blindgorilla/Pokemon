@@ -8,13 +8,22 @@
  * failure here must never block or fail the on-screen confirmation.
  */
 
+import { askForm, sheetExample } from "./content";
+
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 const FROM_ADDRESS = "ask@buyorpasscards.com";
 const SUBJECT = "Your card check is in — here's what I check for every card";
 
+// Brand colours, inlined (email clients don't reliably load external/embedded
+// CSS) — matches app/globals.css's ink/accent/buy tokens.
+const COLOR_INK = "#0b0d10";
+const COLOR_ACCENT = "#f0b23e";
+const COLOR_BUY = "#2f9e5b";
+
 type SendCardCheckEmailInput = {
   cardName: string;
   email: string;
+  wantsCourse: boolean;
 };
 
 type SendResult = { ok: true } | { ok: false; error: string };
@@ -29,38 +38,50 @@ function escapeHtml(value: string): string {
 }
 
 /**
- * Plain, clean HTML — deliberately simpler than the on-screen sheet, since
- * email clients render CSS inconsistently. Same 8-question content as
- * components/SheetExample.tsx, in a checklist-style layout instead of the
- * full card treatment.
+ * Branded HTML, built from the same worked-example data as the on-screen
+ * confirmation (components/SheetExample.tsx via lib/content.ts's
+ * `sheetExample`) so the two can't drift apart. Deliberately simpler than the
+ * on-screen sheet — table-based layout, inline styles only, no images — since
+ * email clients render CSS inconsistently.
  */
-function buildEmailHtml(cardName: string): string {
+function buildEmailHtml(cardName: string, wantsCourse: boolean): string {
   const safeCardName = escapeHtml(cardName);
 
-  const checks: Array<{ title: string; finding?: string }> = [
-    { title: "01 · PRICE", finding: "Recent sales cluster near €1,650 — the €2,100 asking price runs hot." },
-    { title: "02 · LIQUIDITY", finding: "Sells multiple times a month — easy to exit later." },
-    { title: "03 · TREND", finding: "Up steadily over 18 months, not a recent spike." },
-    { title: "04 · SCARCITY", finding: "PSA population is low relative to raw supply still in circulation." },
-    { title: "05 · DEMAND", finding: "Consistently one of the most-searched cards in the set." },
-    { title: "06 · DESIRABILITY" },
-    { title: "07 · GRADE" },
-    { title: "08 · RISK & REWARD" },
-  ];
-
-  const rows = checks
-    .map(({ title, finding }) => {
-      const detail = finding
-        ? escapeHtml(finding)
-        : "Checked personally for every card.";
+  const rows = sheetExample.checks
+    .map((check) => {
+      const [headline, ...rest] = (check.exampleFinding ?? "").split(" — ");
+      const detail = rest.join(" — ");
       return `<tr>
-        <td style="padding:8px 0;border-bottom:1px solid #e5e5e5;">
-          <div style="font-weight:600;font-size:13px;letter-spacing:0.04em;color:#111;">${title}</div>
-          <div style="font-size:14px;color:#444;margin-top:2px;">${detail}</div>
+        <td style="padding:0 0 10px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7f5;border-left:3px solid ${COLOR_BUY};border-radius:6px;">
+            <tr>
+              <td style="padding:12px 14px;">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td valign="top" style="padding-right:10px;">
+                      <span style="display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;background:${COLOR_BUY};color:#ffffff;font-size:12px;font-weight:700;">&#10003;</span>
+                    </td>
+                    <td>
+                      <div style="font-weight:700;font-size:12px;letter-spacing:0.06em;color:#0b0d10;text-transform:uppercase;">
+                        ${check.number} &middot; ${escapeHtml(check.title)}
+                      </div>
+                      <div style="font-size:14px;line-height:1.5;color:#333333;margin-top:4px;">
+                        <strong>${escapeHtml(headline)}</strong>${detail ? ` — ${escapeHtml(detail)}` : ""}
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>`;
     })
     .join("");
+
+  const courseLine = wantsCourse
+    ? `<p style="margin:0 0 16px;">${escapeHtml(askForm.confirmation.courseOptInConfirmation)}</p>`
+    : "";
 
   return `<!doctype html>
 <html>
@@ -68,30 +89,52 @@ function buildEmailHtml(cardName: string): string {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:24px 0;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:8px;padding:32px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:10px;overflow:hidden;">
             <tr>
-              <td style="font-size:15px;line-height:1.5;color:#111;">
-                <p style="margin:0 0 16px;">Hey,</p>
-                <p style="margin:0 0 16px;">
-                  <strong>${safeCardName}</strong> is in the queue. I check every submission
-                  personally and I'll reply with your answer within 24–48 hours.
-                </p>
-                <p style="margin:0 0 8px;font-weight:600;">While you wait, here's what I check for every card:</p>
+              <td style="background:${COLOR_INK};padding:22px 32px;">
+                <div style="font-family:Helvetica,Arial,sans-serif;font-size:18px;font-weight:800;letter-spacing:0.08em;color:${COLOR_ACCENT};">
+                  BUY OR PASS
+                </div>
+                <div style="font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.06em;color:#9aa1ad;margin-top:2px;text-transform:uppercase;">
+                  The Pok&eacute;mon Card Decision System
+                </div>
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="padding:28px 32px 8px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="font-size:15px;line-height:1.5;color:#111111;">
+                      <p style="margin:0 0 16px;">Hey,</p>
+                      <p style="margin:0 0 16px;">
+                        <strong>${safeCardName}</strong> is in the queue. I check every submission
+                        personally and I'll reply with your answer within 24–48 hours.
+                      </p>
+                      ${courseLine}
+                      <p style="margin:0 0 4px;font-weight:700;">While you wait, here's what I check for every card:</p>
+                      <p style="margin:0 0 18px;font-size:13px;color:#666666;">${escapeHtml(sheetExample.sampleCardLabel)}</p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 32px;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                   ${rows}
                 </table>
               </td>
             </tr>
             <tr>
-              <td style="font-size:15px;line-height:1.5;color:#111;padding-top:20px;">
-                <p style="margin:0;">
-                  Have another card you want checked too? Just reply directly to this email
-                  with the name and price — I'll take a look.
-                </p>
+              <td style="padding:8px 32px 32px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdf6e8;border:1px solid #f0dfb2;border-radius:8px;">
+                  <tr>
+                    <td style="padding:16px 18px;font-size:14px;line-height:1.5;color:#5a4a1f;">
+                      Got another card you want checked too? Just reply directly to this email
+                      with the name and price — I'll take a look.
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
           </table>
@@ -105,6 +148,7 @@ function buildEmailHtml(cardName: string): string {
 export async function sendCardCheckConfirmationEmail({
   cardName,
   email,
+  wantsCourse,
 }: SendCardCheckEmailInput): Promise<SendResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const replyTo = process.env.REPLY_TO_EMAIL;
@@ -125,7 +169,7 @@ export async function sendCardCheckConfirmationEmail({
         to: [email],
         reply_to: replyTo || undefined,
         subject: SUBJECT,
-        html: buildEmailHtml(cardName),
+        html: buildEmailHtml(cardName, wantsCourse),
       }),
     });
 
