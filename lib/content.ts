@@ -69,10 +69,15 @@ export const askForm = {
     emailPlaceholder: "you@example.com",
     emailInvalidError: "Please enter a valid email address.",
     submitLabel: "Submit My Card Check",
+    /** Unchecked by default — a genuine opt-in, never pre-selected. */
+    courseOptInLabel: "Also let me know when the full Buy or Pass course is ready.",
   },
   confirmation: {
     headerTemplate: (cardName: string) =>
       `Got it — I'll personally check ${cardName} and reply within 24–48 hours.`,
+    /** Shown only when the course opt-in checkbox was checked. No re-asking if it wasn't. */
+    courseOptInConfirmation:
+      "You're on the list — I'll email you the moment the course opens.",
   },
   genericErrorMessage: "Something went wrong. Please try again in a moment.",
 } as const;
@@ -96,6 +101,17 @@ export const sheetExample = {
   eyebrow: "While you wait, here's what I check",
   sampleCardLabel:
     "Example: Red & Pikachu (Sun & Moon era, 2019, English, standard pull — not a promo)",
+  /**
+   * The actual photographed copy of the sample card. Shown on-screen only —
+   * intentionally not sent in the confirmation email (image rendering is too
+   * inconsistent across email clients to be worth it).
+   */
+  cardPhoto: {
+    src: "/red-pikachu-card.jpg",
+    alt: "PSA 10 graded Red & Pikachu card, Sun & Moon Cosmic Eclipse secret rare, held in hand.",
+    width: 387,
+    height: 516,
+  },
   checks: [
     {
       number: "01",

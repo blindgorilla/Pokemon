@@ -34,6 +34,8 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
   const [checkId, setCheckId] = useState("");
   const [price, setPrice] = useState("");
   const [email, setEmail] = useState("");
+  const [wantsCourse, setWantsCourse] = useState(false);
+  const courseOptInId = useId();
 
   const inFlightRef = useRef(false);
   const lastSubmitRef = useRef(0);
@@ -123,7 +125,13 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
       const response = await fetch("/api/card-check/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: checkId, cardName, price: trimmedPrice, email: trimmedEmail }),
+        body: JSON.stringify({
+          id: checkId,
+          cardName,
+          price: trimmedPrice,
+          email: trimmedEmail,
+          wantsCourse,
+        }),
       });
 
       const data: { ok?: boolean } = await response.json().catch(() => ({}));
@@ -156,18 +164,23 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
   if (step === "confirmation") {
     return (
       <div className="w-full">
-        <div className="panel w-full p-6 sm:p-8">
-          <p className="flex items-center gap-2.5">
+        <div className="panel w-full p-5 sm:p-8">
+          <p className="flex items-start gap-2.5">
             <span
               aria-hidden="true"
-              className="inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
+              className="mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[0.7rem] font-bold text-ink-950"
             >
               ✓
             </span>
-            <span role="status" className="text-lg leading-snug font-semibold tracking-[-0.01em] text-bone-50 sm:text-xl">
+            <span role="status" className="text-base leading-snug font-semibold tracking-[-0.01em] text-bone-50 sm:text-xl">
               {askForm.confirmation.headerTemplate(cardName)}
             </span>
           </p>
+          {wantsCourse && (
+            <p className="mt-3 pl-[1.9375rem] text-sm leading-relaxed text-mute-400">
+              {askForm.confirmation.courseOptInConfirmation}
+            </p>
+          )}
         </div>
         <SheetExample />
       </div>
@@ -234,6 +247,22 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
                 className="h-[3.25rem] w-full min-w-0 rounded-xl border border-white/10 bg-ink-900/80 px-4 text-base text-bone-50 transition placeholder:text-mute-500 hover:border-white/20 focus:outline-none focus-visible:border-accent focus-visible:outline-none disabled:opacity-60"
               />
             </div>
+
+            <label
+              htmlFor={courseOptInId}
+              className="flex cursor-pointer items-start gap-2.5 py-1 text-sm leading-relaxed text-mute-400"
+            >
+              <input
+                id={courseOptInId}
+                name="wantsCourse"
+                type="checkbox"
+                checked={wantsCourse}
+                disabled={isLoading}
+                onChange={(event) => setWantsCourse(event.target.checked)}
+                className="mt-0.5 h-[1.125rem] w-[1.125rem] flex-none rounded border-white/20 bg-ink-900/80 text-accent accent-accent focus-visible:outline-none disabled:opacity-60"
+              />
+              <span>{askForm.step2.courseOptInLabel}</span>
+            </label>
 
             <button
               type="submit"
