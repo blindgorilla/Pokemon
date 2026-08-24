@@ -17,10 +17,14 @@ type SubmitPayload = {
   id?: unknown;
   cardName?: unknown;
   price?: unknown;
+  details?: unknown;
   email?: unknown;
   wantsCourse?: unknown;
   wantsSubscription?: unknown;
 };
+
+// Generous but bounded — this is a free-text aside, not a validated field.
+const MAX_DETAILS_LENGTH = 280;
 
 // Standard UUID shape — matches what Postgres's gen_random_uuid() produces.
 const UUID_PATTERN =
@@ -54,6 +58,9 @@ export async function POST(request: Request) {
 
   const id = payload.id;
   const price = payload.price.trim();
+  const details = isNonEmptyString(payload.details)
+    ? payload.details.trim().slice(0, MAX_DETAILS_LENGTH)
+    : null;
   const email = normalizeEmail(payload.email);
   const cardName = payload.cardName.trim();
   const wantsCourse = payload.wantsCourse === true;
@@ -64,6 +71,7 @@ export async function POST(request: Request) {
       .from("card_checks")
       .update({
         price,
+        details,
         email,
         status: "submitted",
         submitted_at: new Date().toISOString(),
@@ -95,7 +103,7 @@ export async function POST(request: Request) {
     // eslint-disable-next-line no-console
     console.error("[card-check/submit] resend send failed", emailResult.error);
   } else {
-    const notificationResult = await sendCardCheckNotificationEmail({ cardName, price, email });
+    const notificationResult = await sendCardCheckNotificationEmail({ cardName, price, details, email });
     if (!notificationResult.ok) {
       // eslint-disable-next-line no-console
       console.error("[card-check/submit] internal notification email failed", notificationResult.error);

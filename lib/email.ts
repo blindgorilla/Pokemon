@@ -194,6 +194,8 @@ export async function sendCardCheckConfirmationEmail({
 type SendCardCheckNotificationInput = {
   cardName: string;
   price: string;
+  /** Optional card #/set/condition the customer volunteered on step 2. */
+  details: string | null;
   email: string;
 };
 
@@ -207,6 +209,7 @@ type SendCardCheckNotificationInput = {
 export async function sendCardCheckNotificationEmail({
   cardName,
   price,
+  details,
   email,
 }: SendCardCheckNotificationInput): Promise<SendResult> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -222,6 +225,7 @@ export async function sendCardCheckNotificationEmail({
   const text = [
     `Card: ${cardName}`,
     `Price entered: ${price}`,
+    ...(details ? [`Card #/condition: ${details}`] : []),
     `Customer email: ${email}`,
     "",
     "Reply directly to this email to answer them.",

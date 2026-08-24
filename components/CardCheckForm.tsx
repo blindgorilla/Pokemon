@@ -23,6 +23,7 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
   const generatedId = useId();
   const cardNameId = fieldId ?? generatedId;
   const priceId = useId();
+  const detailsId = useId();
   const emailId = useId();
   const statusId = useId();
 
@@ -33,6 +34,7 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
   const [cardName, setCardName] = useState("");
   const [checkId, setCheckId] = useState("");
   const [price, setPrice] = useState("");
+  const [details, setDetails] = useState("");
   const [email, setEmail] = useState("");
   const [wantsCourse, setWantsCourse] = useState(false);
   const [wantsSubscription, setWantsSubscription] = useState(false);
@@ -105,6 +107,7 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
     if (inFlightRef.current) return;
 
     const trimmedPrice = price.trim();
+    const trimmedDetails = details.trim();
     const trimmedEmail = email.trim();
 
     if (!trimmedPrice) {
@@ -131,6 +134,7 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
           id: checkId,
           cardName,
           price: trimmedPrice,
+          details: trimmedDetails || undefined,
           email: trimmedEmail,
           wantsCourse,
           wantsSubscription,
@@ -147,6 +151,7 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
       }
 
       setPrice(trimmedPrice);
+      setDetails(trimmedDetails);
       setEmail(trimmedEmail);
       setStatus("idle");
       setMessage("");
@@ -225,6 +230,23 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
                 }}
                 placeholder={askForm.step2.pricePlaceholder}
                 aria-describedby={message ? statusId : undefined}
+                className="h-[3.25rem] w-full min-w-0 rounded-xl border border-white/10 bg-ink-900/80 px-4 text-base text-bone-50 transition placeholder:text-mute-500 hover:border-white/20 focus:outline-none focus-visible:border-accent focus-visible:outline-none disabled:opacity-60"
+              />
+            </div>
+
+            <div>
+              <label htmlFor={detailsId} className="sr-only">
+                {askForm.step2.detailsLabel}
+              </label>
+              <input
+                id={detailsId}
+                name="details"
+                type="text"
+                maxLength={280}
+                value={details}
+                disabled={isLoading}
+                onChange={(event) => setDetails(event.target.value)}
+                placeholder={askForm.step2.detailsPlaceholder}
                 className="h-[3.25rem] w-full min-w-0 rounded-xl border border-white/10 bg-ink-900/80 px-4 text-base text-bone-50 transition placeholder:text-mute-500 hover:border-white/20 focus:outline-none focus-visible:border-accent focus-visible:outline-none disabled:opacity-60"
               />
             </div>
