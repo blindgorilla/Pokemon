@@ -183,3 +183,66 @@ export async function sendCardCheckConfirmationEmail({
     return { ok: false, error: cause instanceof Error ? cause.message : "network_error" };
   }
 }
+
+type SendCardCheckNotificationInput = {
+  cardName: string;
+  price: string;
+  email: string;
+};
+
+/**
+ * Internal alert sent to Samu (REPLY_TO_EMAIL) whenever a card check is
+ * submitted, with Reply-To set to the customer's email so replying from his
+ * own inbox routes straight back to them. Best-effort, same as the customer
+ * confirmation email — a failure here must never affect the response the
+ * client sees.
+ */
+export async function sendCardCheckNotificationEmail({
+  cardName,
+  price,
+  email,
+}: SendCardCheckNotificationInput): Promise<SendResult> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const notifyTo = process.env.REPLY_TO_EMAIL;
+
+  if (!apiKey) {
+    return { ok: false, error: "missing_resend_api_key" };
+  }
+  if (!notifyTo) {
+    return { ok: false, error: "missing_reply_to_email" };
+  }
+
+  const text = [
+    `Card: ${cardName}`,
+    `Price entered: ${price}`,
+    `Customer email: ${email}`,
+    "",
+    "Reply directly to this email to answer them.",
+  ].join("\n");
+
+  try {
+    const response = await fetch(RESEND_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        from: FROM_ADDRESS,
+        to: [notifyTo],
+        reply_to: email,
+        subject: `New card check: ${cardName}`,
+        text,
+      }),
+    });
+
+    if (!response.ok) {
+      const body = await response.text().catch(() => "");
+      return { ok: false, error: `resend_${response.status}: ${body.slice(0, 300)}` };
+    }
+
+    return { ok: true };
+  } catch (cause) {
+    return { ok: false, error: cause instanceof Error ? cause.message : "network_error" };
+  }
+}
