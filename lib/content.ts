@@ -65,6 +65,9 @@ export const askForm = {
     priceLabel: "Price you're seeing",
     pricePlaceholder: "e.g. €450 or $500",
     priceRequiredError: "Enter the price you're seeing.",
+    /** Optional — never required. Lets whoever already knows it speed up their own answer. */
+    detailsLabel: "Card # or condition (optional)",
+    detailsPlaceholder: "e.g. PSA 8, or #064/198 — helps me answer faster",
     emailLabel: "Email address",
     emailPlaceholder: "you@example.com",
     emailInvalidError: "Please enter a valid email address.",
