@@ -24,6 +24,7 @@ type SendCardCheckEmailInput = {
   cardName: string;
   email: string;
   wantsCourse: boolean;
+  wantsSubscription: boolean;
 };
 
 type SendResult = { ok: true } | { ok: false; error: string };
@@ -44,7 +45,7 @@ function escapeHtml(value: string): string {
  * on-screen sheet — table-based layout, inline styles only, no images — since
  * email clients render CSS inconsistently.
  */
-function buildEmailHtml(cardName: string, wantsCourse: boolean): string {
+function buildEmailHtml(cardName: string, wantsCourse: boolean, wantsSubscription: boolean): string {
   const safeCardName = escapeHtml(cardName);
 
   const rows = sheetExample.checks
@@ -83,6 +84,10 @@ function buildEmailHtml(cardName: string, wantsCourse: boolean): string {
     ? `<p style="margin:0 0 16px;">${escapeHtml(askForm.confirmation.courseOptInConfirmation)}</p>`
     : "";
 
+  const subscriptionLine = wantsSubscription
+    ? `<p style="margin:0 0 16px;">${escapeHtml(askForm.confirmation.subscriptionOptInConfirmation)}</p>`
+    : "";
+
   return `<!doctype html>
 <html>
   <body style="margin:0;padding:0;background:#f4f4f4;font-family:Helvetica,Arial,sans-serif;">
@@ -111,6 +116,7 @@ function buildEmailHtml(cardName: string, wantsCourse: boolean): string {
                         personally and I'll reply with your answer within 24–48 hours.
                       </p>
                       ${courseLine}
+                      ${subscriptionLine}
                       <p style="margin:0 0 4px;font-weight:700;">While you wait, here's what I check for every card:</p>
                       <p style="margin:0 0 18px;font-size:13px;color:#666666;">${escapeHtml(sheetExample.sampleCardLabel)}</p>
                     </td>
@@ -149,6 +155,7 @@ export async function sendCardCheckConfirmationEmail({
   cardName,
   email,
   wantsCourse,
+  wantsSubscription,
 }: SendCardCheckEmailInput): Promise<SendResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const replyTo = process.env.REPLY_TO_EMAIL;
@@ -169,7 +176,7 @@ export async function sendCardCheckConfirmationEmail({
         to: [email],
         reply_to: replyTo || undefined,
         subject: SUBJECT,
-        html: buildEmailHtml(cardName, wantsCourse),
+        html: buildEmailHtml(cardName, wantsCourse, wantsSubscription),
       }),
     });
 

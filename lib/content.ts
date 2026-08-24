@@ -71,6 +71,9 @@ export const askForm = {
     submitLabel: "Submit My Card Check",
     /** Unchecked by default — a genuine opt-in, never pre-selected. */
     courseOptInLabel: "Also let me know when the full Buy or Pass course is ready.",
+    /** Unchecked by default, same weight as courseOptInLabel — an honest demand signal, not a nudge. */
+    subscriptionOptInLabel:
+      "I'd want a weekly email with a few cards you think could be worth it — potential Buy or Pass calls, not guaranteed picks (~$20/mo).",
   },
   confirmation: {
     headerTemplate: (cardName: string) =>
@@ -78,6 +81,9 @@ export const askForm = {
     /** Shown only when the course opt-in checkbox was checked. No re-asking if it wasn't. */
     courseOptInConfirmation:
       "You're on the list — I'll email you the moment the course opens.",
+    /** Shown only when the subscription opt-in checkbox was checked. No re-asking if it wasn't. */
+    subscriptionOptInConfirmation:
+      "Got it — I'll keep you posted if I put this together.",
   },
   genericErrorMessage: "Something went wrong. Please try again in a moment.",
 } as const;
