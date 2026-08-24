@@ -19,6 +19,7 @@ type SubmitPayload = {
   price?: unknown;
   email?: unknown;
   wantsCourse?: unknown;
+  wantsSubscription?: unknown;
 };
 
 // Standard UUID shape — matches what Postgres's gen_random_uuid() produces.
@@ -56,6 +57,7 @@ export async function POST(request: Request) {
   const email = normalizeEmail(payload.email);
   const cardName = payload.cardName.trim();
   const wantsCourse = payload.wantsCourse === true;
+  const wantsSubscription = payload.wantsSubscription === true;
 
   try {
     const { error } = await getSupabaseAdmin()
@@ -66,6 +68,7 @@ export async function POST(request: Request) {
         status: "submitted",
         submitted_at: new Date().toISOString(),
         wants_course: wantsCourse,
+        wants_subscription: wantsSubscription,
       })
       .eq("id", id);
 
@@ -82,7 +85,12 @@ export async function POST(request: Request) {
 
   // Best-effort: the row is already saved, so a failure here must not
   // change the response the client sees.
-  const emailResult = await sendCardCheckConfirmationEmail({ cardName, email, wantsCourse });
+  const emailResult = await sendCardCheckConfirmationEmail({
+    cardName,
+    email,
+    wantsCourse,
+    wantsSubscription,
+  });
   if (!emailResult.ok) {
     // eslint-disable-next-line no-console
     console.error("[card-check/submit] resend send failed", emailResult.error);

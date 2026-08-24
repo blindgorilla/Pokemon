@@ -35,7 +35,9 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
   const [price, setPrice] = useState("");
   const [email, setEmail] = useState("");
   const [wantsCourse, setWantsCourse] = useState(false);
+  const [wantsSubscription, setWantsSubscription] = useState(false);
   const courseOptInId = useId();
+  const subscriptionOptInId = useId();
 
   const inFlightRef = useRef(false);
   const lastSubmitRef = useRef(0);
@@ -131,6 +133,7 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
           price: trimmedPrice,
           email: trimmedEmail,
           wantsCourse,
+          wantsSubscription,
         }),
       });
 
@@ -179,6 +182,11 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
           {wantsCourse && (
             <p className="mt-3 pl-[1.9375rem] text-sm leading-relaxed text-mute-400">
               {askForm.confirmation.courseOptInConfirmation}
+            </p>
+          )}
+          {wantsSubscription && (
+            <p className="mt-3 pl-[1.9375rem] text-sm leading-relaxed text-mute-400">
+              {askForm.confirmation.subscriptionOptInConfirmation}
             </p>
           )}
         </div>
@@ -262,6 +270,22 @@ export default function CardCheckForm({ source, fieldId }: CardCheckFormProps) {
                 className="mt-0.5 h-[1.125rem] w-[1.125rem] flex-none rounded border-white/20 bg-ink-900/80 text-accent accent-accent focus-visible:outline-none disabled:opacity-60"
               />
               <span>{askForm.step2.courseOptInLabel}</span>
+            </label>
+
+            <label
+              htmlFor={subscriptionOptInId}
+              className="flex cursor-pointer items-start gap-2.5 py-1 text-sm leading-relaxed text-mute-400"
+            >
+              <input
+                id={subscriptionOptInId}
+                name="wantsSubscription"
+                type="checkbox"
+                checked={wantsSubscription}
+                disabled={isLoading}
+                onChange={(event) => setWantsSubscription(event.target.checked)}
+                className="mt-0.5 h-[1.125rem] w-[1.125rem] flex-none rounded border-white/20 bg-ink-900/80 text-accent accent-accent focus-visible:outline-none disabled:opacity-60"
+              />
+              <span>{askForm.step2.subscriptionOptInLabel}</span>
             </label>
 
             <button
