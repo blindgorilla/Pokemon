@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { sendCardCheckConfirmationEmail } from "@/lib/email";
+import { sendCardCheckConfirmationEmail, sendCardCheckNotificationEmail } from "@/lib/email";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { isNonEmptyString, isValidEmail, normalizeEmail } from "@/lib/validation";
 
@@ -86,6 +86,12 @@ export async function POST(request: Request) {
   if (!emailResult.ok) {
     // eslint-disable-next-line no-console
     console.error("[card-check/submit] resend send failed", emailResult.error);
+  } else {
+    const notificationResult = await sendCardCheckNotificationEmail({ cardName, price, email });
+    if (!notificationResult.ok) {
+      // eslint-disable-next-line no-console
+      console.error("[card-check/submit] internal notification email failed", notificationResult.error);
+    }
   }
 
   return NextResponse.json({ ok: true });
